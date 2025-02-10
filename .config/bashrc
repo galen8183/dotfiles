@@ -1,0 +1,49 @@
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
+
+# start dbus session if in login shell
+shopt -q login_shell
+if [ "$?" = 0 ]; then
+	eval $(dbus-launch --sh-syntax)
+	"$XDG_CONFIG_HOME/autostart.sh" &
+fi
+
+PS1='[\[\e[92m\]\u@\[\e[94m\]\h \W\[\e[0m\]]\$ '
+
+alias     ls='ls --color=auto -Ah --group-directories-first'
+alias   diff='diff --color=auto'
+alias   grep='grep --color=auto'
+alias   info='info --vi-keys'
+alias ffmpeg='ffmpeg -hide_banner'
+alias   mudl='yt-dlp --config-locations="$XDG_CONFIG_HOME/yt-dlp/music.conf" -P'
+alias   tmux='tmux -2'
+alias    xrm='doas xbps-remove'
+
+alias  gs='git status'
+alias  ga='git add'
+alias  gc='git commit --signoff'
+alias  gp='git pull'
+alias gpu='git push'
+alias  gl='git log'
+alias  gg='git grep'
+alias gco='git checkout'
+alias  gd='git diff'
+alias gsw='git switch'
+
+# coerce XDG compliancy
+alias     wget='wget --hsts-file="$XDG_DATA_HOME/wget-hsts"'
+alias     lmms='lmms --config "$XDG_CONFIG_HOME/lmmsrc.xml"'
+alias    irssi='irssi --home="$XDG_CONFIG_HOME/irssi"'
+alias   gphoto='TMPCFG_SRC="$XDG_CONFIG_HOME/gphoto" TMPCFG_DEST="$HOME/.gphoto" tempconfig gphoto2'
+alias     cpat='TMPCFG_SRC="$XDG_DATA_HOME/cpat-scores" TMPCFG_DEST="$HOME/.cpat_scores" tempconfig cpat'
+alias   sqlite='TMPCFG_SRC="$XDG_DATA_HOME/sqlite-history" TMPCFG_DEST="$HOME/.sqlite_history" tempconfig sqlite3'
+alias      npm='TMPCFG_SRC="$XDG_DATA_HOME/npm" TMPCFG_DEST="$HOME/.npm" tempconfig npm'
+
+# tempconfig temporarily moves a config file to a specified location, for
+# applications not recognising XDG-compliant configuration files
+tempconfig () {
+	mv "$TMPCFG_SRC" "$TMPCFG_DEST"
+	local _CMD=$1; shift
+	"$_CMD" "$@"
+	mv "$TMPCFG_DEST" "$TMPCFG_SRC"
+}

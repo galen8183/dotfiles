@@ -1,0 +1,12 @@
+set item-content-date-format '%a %F %T'
+set list-entry-date-format   '%a %F %T'
+set menu-item-sorting        'unread-desc'
+
+bind q quit-hard
+bind u mark-unread
+bind d mark-read
+
+bind i exec sh -c 'curl -so /tmp/newsraft-img "%l" && nsxiv /tmp/newsraft-img'
+bind m exec yt-mpv -n "%l"
+bind M exec yt-mpv "%l"
+bind w exec yt-mpv -w "%l"

@@ -1,0 +1,22 @@
+#!/bin/sh
+echo foo
+
+# map caps lock to esc
+setxkbmap -option caps:escape
+
+xrandr --auto \
+	 --output DP-2 --primary --right-of DP-3
+
+[ -f "$XDG_CONFIG_HOME/x11/xresources" ] && xrdb -merge "$XDG_CONFIG_HOME/x11/xresources"
+
+# notification daemon for notify-send
+exec dunst &
+
+# dwm status bar script
+#/home/galen/.local/bin/dwmstatus &
+slstatus &
+
+#rescrobbled &
+
+#exec dbus-launch --exit-with-session dwm
+dwm

@@ -1,0 +1,45 @@
+#!/bin/sh
+
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_STATE_HOME="$HOME/.local/state"
+
+appendpath () {
+	case ":$PATH:" in
+		*:"$1":*) ;;
+		*) PATH="${PATH:+$PATH:}$1" ;;
+	esac
+}
+
+export GOPATH="$XDG_DATA_HOME/go"
+appendpath "$GOPATH/bin"
+appendpath "$HOME/.local/bin"
+unset appendpath
+export PATH
+
+# coerce applications to use XDG directories
+export XAUTHORITY="$XDG_RUNTIME_DIR/Xauthority"
+export XINITRC="$XDG_CONFIG_HOME/x11/xinitrc"
+export GNUPGHOME="$XDG_DATA_HOME/gnupg"
+export _JAVA_OPTIONS="-Djava.util.prefs.userRoot=$XDG_DATA_HOME/java"
+export INPUTRC="$HOME/.config/inputrc"
+export TEXMFHOME="$XDG_DATA_HOME/texmf"
+export TEXMFVAR="$XDG_CACHE_HOME/texlive/texmf-var"
+export TEXMFCONFIG="$XDG_CONFIG_HOME/texlive/texmf-config"
+
+export PASSWORD_STORE_DIR="$XDG_DATA_HOME/password-store"
+export PASSWORD_STORE_CLIP_TIME=30
+export PASSWORD_STORE_GENERATED_LENGTH=32
+
+export TERMINAL="st"
+export EDITOR="nvim"
+export BROWSER="qutebrowser"
+export MANPAGER="nvim +Man!"
+export PAGER="less"
+
+# erase previous duplicate lines and omit lines beginning with space
+export HISTCONTROL="erasedups:ignorespace"
+
+export _JAVA_AWT_WM_NONREPARENTING=1
+export JAVAFX_LIB="/usr/local/lib/javafx-sdk-23.0.1/lib"

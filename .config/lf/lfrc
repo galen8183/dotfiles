@@ -1,0 +1,9 @@
+set hidden
+
+map y
+map yy copy
+map yp $printf '%s' "$fx"  | xclip -sel clip
+map yn $basename -a -- $fx | head -c-1 | xclip -sel clip
+map yd $dirname -- "$f"    | head -c-1 | xclip -sel clip
+
+map ' ' select
