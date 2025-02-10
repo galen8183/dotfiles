@@ -1,0 +1,21 @@
+[submodule ".local/share/nvim/site/pack/plug/start/yagpdb.vim"]
+	path = .local/share/nvim/site/pack/plug/start/yagpdb.vim
+	url = git@github.com:l-zeuch/yagpdb.vim.git
+[submodule ".local/share/nvim/site/pack/plug/start/vim-fugitive"]
+	path = .local/share/nvim/site/pack/plug/start/vim-fugitive.git/
+	url = git@github.com:tpope/vim-fugitive.git
+[submodule ".local/share/nvim/site/pack/plug/start/nordtheme.git"]
+	path = .local/share/nvim/site/pack/plug/start/nordtheme
+	url = git@github.com:nordtheme/vim.git
+[submodule ".local/share/nvim/site/pack/plug/start/vim-fugitive.git"]
+	path = .local/share/nvim/site/pack/plug/start/vim-fugitive
+	url = git@github.com:tpope/vim-fugitive.git
+[submodule ".local/share/nvim/site/pack/plug/start/csv.vim"]
+	path = .local/share/nvim/site/pack/plug/start/csv.vim
+	url = git@github.com:chrisbra/csv.vim.git
+[submodule ".local/share/nvim/site/pack/plug/start/which-key.nvim"]
+	path = .local/share/nvim/site/pack/plug/start/which-key.nvim
+	url = git@github.com:folke/which-key.nvim.git
+[submodule ".local/share/nvim/site/pack/plug/start/vimtex"]
+	path = .local/share/nvim/site/pack/plug/start/vimtex
+	url = git@github.com:lervag/vimtex.git
