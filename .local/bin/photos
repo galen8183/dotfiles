@@ -1,0 +1,11 @@
+#!/bin/sh
+
+PICTURES="${1:-$(xdg-user-dir PICTURES)/$(date +%Y/%m/)}"
+
+mkdir -p "$PICTURES"
+cd "$PICTURES"
+
+doas gphoto2 --auto-detect --get-all-files --new
+doas chown galen:galen *
+
+nsxiv .

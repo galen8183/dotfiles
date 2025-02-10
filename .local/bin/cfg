@@ -1,0 +1,10 @@
+#!/bin/sh
+
+CFG_DIR="$XDG_CONFIG_HOME/dotfiles"
+CFG_FILES="gitmodules gitignore"
+for f in $CFG_FILES; do ln "$CFG_DIR/$f" "$HOME/.$f"; done
+
+[ "$#" -eq 0 ] && set -- status
+git --git-dir="$CFG_DIR/repo.git" --work-tree="$HOME" "$@"
+
+for f in $CFG_FILES; do rm "$HOME/.$f"; done

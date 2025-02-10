@@ -1,0 +1,10 @@
+#!/bin/sh
+
+[ "$1" = "" ] && echo provide IP address to sync to && exit 1
+
+mkdir -p "$HOME/bak"
+rsync --debug=ALL4 -aivzb --backup-dir="$HOME/bak" --exclude=* \
+	--include="$HOME/"{.config,.local/{bin,share}} \
+	--include="$HOME/"{doc,downloads,src} \
+	--include="$HOME/media/"{audio,music,picture,video/rec} \
+	"$HOME" "$(whoami)@$1:$HOME"

@@ -1,0 +1,8 @@
+#!/bin/sh
+
+set -e
+cd ~/src/yagpdb/cmd/yagpdb
+sh build.sh
+echo Installing...
+doas install yagpdb /usr/local/bin
+echo Done

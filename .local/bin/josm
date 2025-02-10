@@ -1,0 +1,57 @@
+#!/bin/sh
+
+usage () {
+	cat 1>&2 <<EOF
+josm [command]
+Run or update JOSM.
+Options can be passed to the JVM with '-Dopt=val'
+All other options are passed directly to josm.
+
+Commands:
+  -h, help   display this help text and exit
+  -u, update check for new releases and update JOSM if found
+EOF
+	exit 0
+}
+
+JAVA=/usr/lib/jvm/openjdk21/bin/java
+JOSM_JAR="$XDG_DATA_HOME/applications/josm-tested.jar"
+JOSM_CMD="$JAVA
+			--module-path /usr/local/lib/javafx-sdk-23.0.1/lib --add-modules=ALL-MODULE-PATH
+			--add-exports=java.base/sun.security.action=ALL-UNNAMED
+			--add-exports=java.desktop/com.sun.imageio.plugins.jpeg=ALL-UNNAMED
+			--add-exports=java.desktop/com.sun.imageio.spi=ALL-UNNAMED
+"
+
+version () {
+	"$JAVA" -jar "$JOSM_JAR" --version 2>/dev/null | cut -d' ' -f1-3
+}
+
+case "$1" in
+	-h|help) usage ;;
+	-v|version) version ;;
+	-u|update)
+		OLDVER=$(version)
+		echo checking for update...
+		curl -s -o "$JOSM_JAR" -z "$JOSM_JAR" \
+			"https://josm.openstreetmap.de/download/josm-tested.jar"
+		VER=$(version)
+		[ "$OLDVER" = "$VER" ] && echo "No new version (already $VER)" || \
+			echo "updated from $OLDVER to $VER"
+		;;
+	"")
+		$JOSM_CMD -jar "$JOSM_JAR" "$XDG_DATA_HOME/JOSM/session-default.joz"
+		;;
+	*)
+		JOSM_OPTS=
+		while [ $# -ne 0 ]; do
+			case "$1" in
+				-D*) JOSM_CMD="$JOSM_CMD $1" ;;
+				*) JOSM_OPTS="$JOSM_OPTS $1" ;;
+			esac
+			shift
+		done
+
+		$JOSM_CMD $JAVA_OPTS -jar "$JOSM_JAR" $JOSM_OPTS
+		;;
+esac

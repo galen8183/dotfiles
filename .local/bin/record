@@ -1,0 +1,77 @@
+#!/bin/sh
+# record uses ffmpeg to record session audio and/or video
+# see 'record --help' for more information
+
+die () {
+	printf "%s\nTry 'record --help' for more information.\n" "$1" 1>&2
+	exit 1
+}
+
+usage () {
+	cat 1>&2 <<EOF
+record options [filename]
+Record session audio and/or video with ffmpeg.
+
+Options:
+  -v, --verbose     be more verbose
+  -q, --quiet       supress most messages
+  -a, --audio       record loopback audio
+  -x, --video       record selection of X display
+  -t, -d=DURATION   stop recording after DURATION
+  -?, -h, --help    display this help and exit
+
+At least one recording method must be specified. File formats are determined by
+the file extension. By default FLAC is used for audio only recording and WebM is
+used for any video recording.
+EOF
+}
+
+OK= DEST= ARGDEST=
+LOGLEVEL="level+info"
+ARGS="-hide_banner"
+
+while [ "$#" != 0 ]; do
+	case "$1" in
+		-q|--quiet)   LOGLEVEL="fatal" ;;
+		-v|--verbose) LOGLEVEL="level+verbose" ;;
+
+		-a|--audio)
+			OK=1
+			ARGS="$ARGS -f alsa -ac 2 -i loopin"
+			ln -s "$XDG_CONFIG_HOME/alsa/asoundrc-loopback" "$XDG_CONFIG_HOME/alsa/asoundrc"
+			[ -z "$DEST" ] && DEST="$HOME/media/audio/$(date +%FT%H%M%S).flac"
+			;;
+		-x|--video)
+			OK=1
+			REGION=$(xrectsel "%wx%h %x,%y")
+			[ "${REGION% *}" = "0x0" ] && die "Invalid X selection"
+
+			ARGS="$ARGS -video_size ${REGION% *} -f x11grab -i :0.0+${REGION#* }"
+			[ -z "$ARGDEST" ] && DEST="$HOME/media/video/rec/$(date +%FT%H%M%S).webm"
+			;;
+		-t|-d|--duration)
+			[ -z "$2" ] && OK= && break
+			ARGS="-t $2 $ARGS"
+			shift
+			;;
+		-\?|-h|--help)
+			usage
+			exit 0
+			;;
+		*)
+			ARGDEST=1
+			DEST=$1
+			;;
+	esac
+
+	shift
+done
+
+[ -z "$OK" ] && die "missing operand"
+[ ! -d "$(dirname "$DEST")" ] && die "destination directory does not exist"
+
+[ "$LOGLEVEL" != "fatal" ] && echo "Executing ffmpeg -loglevel \"$LOGLEVEL\" $ARGS \"$DEST\""
+ffmpeg -loglevel "$LOGLEVEL" $ARGS "$DEST"
+
+notify-send "Recorded to $DEST"
+rm "$XDG_CONFIG_HOME/alsa/asoundrc"

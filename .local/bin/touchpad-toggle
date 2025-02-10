@@ -1,0 +1,5 @@
+#!/bin/sh
+
+VAL=0
+[ "$(xinput list-props 'Synaptics TM3145-005' | grep -q 'Device Enabled ([0-9]\*): 0')" ] && VAL=1
+xinput set-prop 'Synaptics TM3145-005' 'Device Enabled' "$VAL"

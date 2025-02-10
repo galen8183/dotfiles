@@ -1,0 +1,6 @@
+#!/bin/sh
+
+FILE="$HOME/media/scrot/$(date +%FT%H%M%S).png"
+import "$FILE"
+xclip -sel clip -t image/png -i "$FILE"
+notify-send "Screenshot copied to clipboard and saved to $FILE"

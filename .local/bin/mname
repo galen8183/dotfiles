@@ -1,0 +1,115 @@
+#!/bin/sh
+# mname normalises track names, removing abnormal
+# see 'mname --help' for more information
+
+die () {
+	log "ERRO" "$1"
+	printf "%s\nTry 'mname --help' for more information.\n" "$1" 1>&2
+	exit 1
+}
+
+usage () {
+	cat 1>&2 <<EOF
+Usage: mname [options] FILE...
+Normalise music track filenames.
+
+Options:
+  -v, --verbose         print a message for each moved file
+  -l, --log=LOGFILE     write logs to LOGFILE
+  -n, --dry-run         don't make any changes
+  -t, --type=MIMETYPE   only act on files of type MIMETYPE
+  -?, -h, --help        display this help and exit
+
+Characters not matching '[A-Za-z0-9-.]' are truncated and replaced with a
+hyphen, except in pluralisations where they are fully removed. If known, the
+track number is prepended to the filename. Directories are traversed recursively.
+EOF
+}
+
+log () {
+	[ "$1" = "INFO" ] && [ "$VERBOSE" -eq 1 ] && printf "%s\n" "$2"
+	[ -z "$LOGFILE" ] && return 0
+
+	LOGCOLOUR=
+	case "$1" in
+		INFO) LOGCOLOUR=33 ;; # yellow
+		DBUG) LOGCOLOUR=36 ;; # cyan
+		*)    LOGCOLOUR=31 ;; # red, shouldn't be here
+	esac
+
+	printf "[%s] [\033[%sm%s\033[0m] %s\n" "$(date -Ins)" "$LOGCOLOUR" "$1" "$2" >> "$LOGFILE"
+}
+
+process () {
+	log "DBUG" "Processing '$1'"
+
+	if [ -d "$1" ]; then
+		log "INFO" "Traversing directory '$1'"
+		for FILE in "$1"/*; do process "$FILE"; done
+	fi
+
+	_TYPE="$(file -Lb --mime-type -- "$1")"
+	if [ -n "$TYPE" ] && [ "$TYPE" != "$_TYPE" ]; then
+		log "DBUG" "Skipping '$1', mismatched MIME type $_TYPE"
+		return
+	fi
+
+	DEST=
+	if [ ! -d "$1" ]; then
+		log "DBUG" "Probing '$1' for track number"
+		TRACK="$(ffprobe -v 0 -show_entries format_tags=track -of default=nk=1:nw=1 -i "$1")"
+		TRACK="$(printf "%s" "${TRACK%%/*}" | tr -c -d '0-9')"
+		DEST="$(printf "%02d-" "$TRACK" 2>/dev/null)"
+	
+		[ -z "$TRACK" ] || basename -- "$1" | grep -q "^0\?$TRACK" && DEST=
+	fi
+
+	DIR="$(dirname -- "$1")"
+	DEST="$DEST$(basename -- "$1" |
+		tr -d '\n' |
+		tr '[:upper:]' '[:lower:]' |
+		tr -c -s 'a-z0-9-.' '-' |
+		sed -E -e 's/([a-z])-([stm]|[rv]e|ll)([^a-z])/\1\2\3/g' -e 's/\W+(\.\w+$)/\1/'
+	)"
+
+	[ "$(basename -- "$1")" = "$DEST" ] && return
+	log "INFO" "$(basename -- "$1") -> $DEST"
+	[ "$DRY_RUN" -eq 1 ] && return
+	mv -- "$1" "$DIR/$DEST"
+}
+
+VERBOSE=0 LOGFILE= DRY_RUN=0 TYPE=
+
+while [ "$#" != 0 ]; do
+	log "DBUG" "Parsing argument '$1'"
+
+	case "$1" in
+		-v|--verbose) VERBOSE=1 ;;
+		-n|--dry-run) DRY_RUN=1 ;;
+		-l|--log)
+			[ -z "$2" ] || printf "%s" "$2" | grep -q '^-' &&
+				die "option requires an argument -- '$1'"
+			LOGFILE=$2; shift
+			;;
+		-t|--type)
+			[ -z "$2" ] || printf "%s" "$2" | grep -q '^-' &&
+				die "option requires an argument -- '$1'"
+			TYPE=$2; shift
+			;;
+		-\?|-h|--help)
+			usage
+			exit 0
+			;;
+		--) shift; break ;;
+		-*) die "unknown option '$1'" ;;
+		*) break ;;
+	esac
+
+	shift
+done
+
+[ "$#" -eq 0 ] && die "missing operand"
+
+for FILE in "$@"; do
+	process "$FILE"
+done

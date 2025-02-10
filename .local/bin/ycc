@@ -1,0 +1,128 @@
+#!/bin/sh
+# Upload YAGPDB custom commands from files
+
+die () {
+	printf "%s\nTry 'ycc --help' for more information.\n" "$1" 1>&2
+	exit 1
+}
+
+usage() {
+	cat 1>&2 <<EOF
+ycc [options] CCID FILE
+YAGPDB CC uploader utility
+
+Options:
+  -v, --verbose     be more verbose
+  -g, --guild ID    set guild ID to upload to
+  -r, --refresh     refresh cached session cookie
+  -h, --help        print this help text and exit
+EOF
+}
+
+# get_cookie gets the current session cookie from a cache file or
+# a browser's cookie jar (currently only mozilla firefox)
+# If the cached cookie is older than one week, the cache is refreshed
+get_cookie() {
+	YAGPDB_SESSION_CACHE="$XDG_CACHE_HOME/yagpdb-session-cookie"
+
+	# Cache session cookie for one week
+	if [ -z "$1" ] && [ -f "$YAGPDB_SESSION_CACHE" ] && \
+		[ $(( $(date +%s) - 604800)) -le "$(stat -c %Y "$YAGPDB_SESSION_CACHE")" ]; then
+		cat "$YAGPDB_SESSION_CACHE"
+		return
+	fi
+
+	case "$BROWSER" in
+		firefox)
+			COOKIE_JAR="$(ls "$HOME"/.mozilla/firefox/*/cookies.sqlite)"
+			QUERY="SELECT value FROM moz_cookies WHERE host='yagpdb.xyz' AND name='yagpdb-session-3' ORDER BY creationTime DESC LIMIT 1"
+			;;
+		chromium|google-chrome)
+			COOKIE_JAR="$XDG_CONFIG_HOME/$BROWSER/Default/Cookies"
+			QUERY="SELECT value FROM cookies WHERE host_key='yagpdb.xyz' AND name='yagpdb-session-3' ORDER BY creation_utc DESC LIMIT 1"
+			;;
+		qutebrowser)
+			COOKIE_JAR="$XDG_DATA_HOME/qutebrowser/webengine/Cookies"
+			QUERY="SELECT value FROM cookies WHERE host_key='yagpdb.xyz' AND name='yagpdb-session-3' ORDER BY creation_utc DESC LIMIT 1"
+			;;
+		*)
+			die "\$BROWSER not set or unknown"
+			;;
+	esac
+
+	# Don't try to query active/locked databases
+	cp "$COOKIE_JAR" /tmp/browser-cookies.sqlite
+
+	YAGPDB_COOKIES=$(sqlite3 /tmp/browser-cookies.sqlite "$QUERY")
+	[ -z "$YAGPDB_COOKIES" ] && die "Session cookie not found, please log in to the YAGPDB control panel and retry"
+
+	printf "%s" "$YAGPDB_COOKIES" | tail -n 1 | tee "$YAGPDB_SESSION_CACHE"
+}
+
+XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
+XDG_DATA_HOME=${XDG_DATA_HOME:-$HOME/.local/share}
+XDG_CACHE_HOME=${XDG_CACHE_HOME:-$HOME/.cache}
+
+CC_ID= FILE=
+POS_ARG_NUM=0
+
+while [ $# -gt 0 ]; do
+	case "$1" in
+		-h|--help)
+			usage
+			exit 0
+			;;
+		-g|--guild)
+			[ -z "$2" ] && die "missing operand"
+			echo "GUILD_ID=$2" > "$XDG_CONFIG_HOME/ycc.conf"
+			echo Set guild ID to $2
+			exit 0
+			;;
+		-r|--refresh)
+			get_cookie 1 > /dev/null
+			echo Refreshed session cookie
+			exit 0
+			;;
+		-*|--*)
+			die "unknown option $1"
+			;;
+		*)
+			case "$POS_ARG_NUM" in
+				0) CC_ID=$1 ;;
+				1) [ -f "$1" ] && FILE=$1 || die "no such file '$1'" ;;
+			esac
+			POS_ARG_NUM=$(( $POS_ARG_NUM + 1 ))
+			shift
+			;;
+	esac
+done
+
+[ -f "$XDG_CONFIG_HOME/ycc.conf" ] && . "$XDG_CONFIG_HOME/ycc.conf" || die "must set guild ID"
+
+# Need ccid and valid infile
+[ $POS_ARG_NUM -ne 2 ] && die "missing operand"
+
+YAGPDB_SESSION_COOKIE=$(get_cookie)
+CC_TRIGGER="$(grep -q 'Trigger: .\+' "$FILE" | sed 's/^\s\+Trigger: \(Regex: \|Command: \|Starts With: \)\?//')"
+DATA=$(printf -- "--data-urlencode %s " \
+	"id=$CC_ID" \
+	"type=cmd" \
+	"trigger=${CC_TRIGGER:-test}" \
+	"is_enabled=on" \
+	"responses@$FILE" \
+	"GroupID=312298" \
+	"show_errors=on" \
+)
+
+curl >/dev/null -fsb "yagpdb-session-3=$YAGPDB_SESSION_COOKIE" $DATA \
+	"https://yagpdb.xyz/manage/$GUILD_ID/customcommands/commands/$CC_ID/update"
+
+if [ "$?" -ne 0 ]; then
+	echo Request failed, refreshing cookie and trying again...
+
+	YAGPDB_SESSION_COOKIE="$(get_cookie 1)"
+	curl >/dev/null -fsSb "yagpdb-session-3=$YAGPDB_SESSION_COOKIE" $DATA \
+		"https://yagpdb.xyz/manage/$GUILD_ID/customcommands/commands/$CC_ID/update"
+else
+	echo "Uploaded '$FILE' to CC #$CC_ID with trigger '${CC_TRIGGER:-test}'"
+fi
