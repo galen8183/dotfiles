@@ -27,6 +27,7 @@ export INPUTRC="$HOME/.config/inputrc"
 export TEXMFHOME="$XDG_DATA_HOME/texmf"
 export TEXMFVAR="$XDG_CACHE_HOME/texlive/texmf-var"
 export TEXMFCONFIG="$XDG_CONFIG_HOME/texlive/texmf-config"
+export BIBINPUTS="$XDG_CONFIG_HOME/bibtex"
 
 export PASSWORD_STORE_DIR="$XDG_DATA_HOME/password-store"
 export PASSWORD_STORE_CLIP_TIME=30
