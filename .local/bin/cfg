@@ -1,8 +1,8 @@
 #!/bin/sh
 
 CFG_DIR="$XDG_CONFIG_HOME/dotfiles"
-CFG_FILES="gitmodules gitignore"
-for f in $CFG_FILES; do ln "$CFG_DIR/$f" "$HOME/.$f"; done
+CFG_FILES="README .gitmodules .gitignore"
+for f in $CFG_FILES; do ln "$CFG_DIR/$f" "$HOME/$f"; done
 
 case "$1" in
 	"") set -- status ;;
@@ -10,4 +10,4 @@ case "$1" in
 esac
 git --git-dir="$CFG_DIR/repo.git" --work-tree="$HOME" "$@"
 
-for f in $CFG_FILES; do rm "$HOME/.$f"; done
+for f in $CFG_FILES; do rm "$HOME/$f"; done
