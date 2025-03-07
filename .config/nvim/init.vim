@@ -28,9 +28,15 @@ set showcmd
 set showmode
 set ruler
 
-" simplify tab and split pane navigation
-map J gt
-map K gT
+" annoyances
+set noerrorbells
+set novisualbell
+set splitbelow splitright
+set mouse=
+
+" simplify tab and split pane navigation (note plugins may override these)
+map <M-j> gt
+map <M-k> gT
 map <C-h> <C-w>h
 map <C-j> <C-w>j
 map <C-k> <C-w>k
@@ -48,11 +54,6 @@ map <leader>p "+p
 map <leader>P "+P
 map <leader>a :%y+<CR>
 
-set noerrorbells
-set novisualbell
-set splitbelow splitright
-set mouse=
-
 filetype plugin indent on
 autocmd FileType sh setl textwidth=80 formatoptions=jtq
 autocmd FileType tex setl textwidth=80 formatoptions=jtq
@@ -60,6 +61,10 @@ autocmd FileType tex setl textwidth=80 formatoptions=jtq
 let g:netrw_liststyle = 3       " tree style listing
 let g:yagpdbcc_override_ft = 1  " also detect .go.tmpl .gotmpl
 let timeoutlen = 1500           " wait for 1.5s before which-key dialog
+
+set spelllang=en
+nnoremap <silent> <F11> :set spell!<cr>
+inoremap <silent> <F11> <C-O>:set spell!<cr>
 
 " check file with shellcheck
 map <leader>s :w \| !shellcheck -x %:p<CR>
@@ -77,5 +82,3 @@ autocmd BufNewFile,BufRead ~/src/void-packages/srcpkgs/*/template setl ft=sh
 " csv.vim
 let g:csv_default_delim = ','
 let g:csv_arrange_align = 'l*'
-let g:csv_nomap_j = 1
-let g:csv_nomap_k = 1
