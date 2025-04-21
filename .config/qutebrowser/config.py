@@ -53,9 +53,7 @@ c.zoom.levels = ['25%', '33%', '50%', '67%', '75%', '80%', '90%', '100%',
                  '110%', '125%', '150%', '175%', '200%', '250%', '300%',
                  '400%', '500%']
 
-# Background color of unselected tabs.
-c.colors.tabs.odd.bg = '#444444'
-c.colors.tabs.even.bg = '#252525'
+config.source('nordtheme/nord-qutebrowser.py')
 
 # Default font size (in pixels) for regular text.
 c.fonts.web.size.default = 14
