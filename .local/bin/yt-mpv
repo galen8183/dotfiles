@@ -27,10 +27,9 @@ EOF
 	exit 0
 }
 
-MARK_WATCHED=0
-ARGS="--ytdl-format=bv*[height<=1080]+ba/b --ytdl-raw-options=$(printf "%s," \
-	"sub-lang=en" "write-subs=" "write-auto-subs=" "sponsorblock-remove=sponsor")"
-#ARGS="$ARGS,extractor-args=\"youtube:player_client=android,web\"" 
+MARK_WATCHED=0 # set to 1 to mark watched by default
+ARGS="--ytdl-format=bv*[height<=1080]+ba/b --ytdl-raw-options=$(printf "%s,"\
+	"sub-lang=en" "write-subs=" "write-auto-subs=")"
 
 while [ "$#" != 0 ]; do
 	case "$1" in
@@ -55,6 +54,7 @@ done
 
 [ "$#" -eq 0 ] && die "missing operand"
 
+# shellcheck disable=2086
 [ $MARK_WATCHED -ne 2 ] && (mpv $ARGS -- "$@" || exit)
 [ $MARK_WATCHED -eq 0 ] && exit
 yt-dlp \
