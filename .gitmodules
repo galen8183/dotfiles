@@ -44,5 +44,5 @@
 	path = .local/share/nvim/site/pack/plug/start/luasnip
 	url = git@github.com:L3MON4D3/LuaSnip.git
 [submodule ".config/qutebrowser/nordtheme"]
-	path = .config/qutebrowser/nordtheme
+	path = .config/qutebrowser/config/nord
 	url = git@github.com:Linuus/nord-qutebrowser.git

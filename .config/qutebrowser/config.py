@@ -4,6 +4,8 @@
 # load config-cycle set options
 config.load_autoconfig(True)
 
+config.source('config/nord/nord-qutebrowser.py')
+
 c.confirm_quit = ['multiple-tabs', 'downloads']
 
 c.completion.open_categories = ['searchengines', 'quickmarks',
@@ -16,8 +18,8 @@ c.tabs.mousewheel_switching = False
 c.tabs.padding = {'bottom': 1, 'left': 1, 'right': 3, 'top': 1}
 c.tabs.pinned.frozen = False
 c.url.default_page = 'about:blank'
-c.url.incdec_segments = ['path', 'query', 'anchor'] # :navigate URL segments
 c.url.start_pages = 'qute://version'
+c.url.incdec_segments = ['path', 'query', 'anchor'] # :navigate URL segments
 c.downloads.location.suggestion = 'both'
 c.downloads.location.remember = True
 
@@ -52,8 +54,6 @@ c.zoom.default = '80%'
 c.zoom.levels = ['25%', '33%', '50%', '67%', '75%', '80%', '90%', '100%',
                  '110%', '125%', '150%', '175%', '200%', '250%', '300%',
                  '400%', '500%']
-
-config.source('nordtheme/nord-qutebrowser.py')
 
 # Default font size (in pixels) for regular text.
 c.fonts.web.size.default = 14
@@ -118,8 +118,7 @@ c.url.yank_ignored_parameters = [
     'i_campaign', '__cft__', '__tn__'
 ]
 
-# Enable the ad/host blocker, use both Brave's ABP-style adblocker and host
-# blocking
+#  use both Brave's ABP-style and host blockers
 c.content.blocking.enabled = True
 c.content.blocking.method = "both"
 c.content.blocking.adblock.lists = [
