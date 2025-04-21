@@ -25,3 +25,21 @@
 [submodule ".local/share/nvim/site/pack/plug/start/vim-go"]
 	path = .local/share/nvim/site/pack/plug/start/vim-go
 	url = git@github.com:fatih/vim-go.git
+[submodule ".local/share/nvim/site/pack/plug/start/vim-vsnip"]
+	path = .local/share/nvim/site/pack/plug/start/vsnip
+	url = git@github.com:hrsh7th/vim-vsnip.git
+[submodule ".local/share/nvim/site/pack/plug/start/nvim-cmp"]
+	path = .local/share/nvim/site/pack/plug/start/nvim-cmp
+	url = git@github.com:hrsh7th/nvim-cmp.git
+[submodule ".local/share/nvim/site/pack/plug/start/nvim-lspconfig"]
+	path = .local/share/nvim/site/pack/plug/start/nvim-lspconfig
+	url = git@github.com:neovim/nvim-lspconfig.git
+[submodule ".local/share/nvim/site/pack/plug/start/cmp-nvim-lsp"]
+	path = .local/share/nvim/site/pack/plug/start/cmp-nvim-lsp
+	url = git@github.com:hrsh7th/cmp-nvim-lsp.git
+[submodule ".local/share/nvim/site/pack/plug/start/friendly-snippets"]
+	path = .local/share/nvim/site/pack/plug/start/friendly-snippets
+	url = git@github.com:rafamadriz/friendly-snippets.git
+[submodule ".local/share/nvim/site/pack/plug/start/luasnip"]
+	path = .local/share/nvim/site/pack/plug/start/luasnip
+	url = git@github.com:L3MON4D3/LuaSnip.git
