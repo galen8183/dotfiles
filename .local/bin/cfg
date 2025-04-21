@@ -1,13 +1,19 @@
 #!/bin/sh
 
 CFG_DIR="$XDG_CONFIG_HOME/dotfiles"
+# keep home directory clean, but include a top-level README and .git* files
 CFG_FILES="README .gitmodules .gitignore"
-for f in $CFG_FILES; do ln "$CFG_DIR/$f" "$HOME/$f"; done
+for f in $CFG_FILES; do
+	cp "$CFG_DIR/$f" "$HOME/$f"
+done
 
 case "$1" in
 	"") set -- status ;;
 	"i") set -- status --ignored ;;
 esac
+
 git --git-dir="$CFG_DIR/repo.git" --work-tree="$HOME" "$@"
 
-for f in $CFG_FILES; do rm "$HOME/$f"; done
+for f in $CFG_FILES; do
+	mv "$HOME/$f" "$CFG_DIR/$f"
+done
