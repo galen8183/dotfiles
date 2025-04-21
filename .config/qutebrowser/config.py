@@ -26,10 +26,12 @@ c.editor.command = ['st', '-e', 'nvim', '{}']
 # Search engines which can be used via the address bar.
 c.url.searchengines = {
     'DEFAULT': 'https://duckduckgo.com/?q={}',
-    'bs': 'https://baresearch.org/search?q={}',
     'bc': 'https://bandcamp.com/search?q={}',
+    'bs': 'https://baresearch.org/search?q={}',
     'di': 'https://en.wiktionary.org/wiki/Special:Search?search={}',
     'gh': 'https://github.com/search?q={}',
+    'josm': 'https://josm.openstreetmap.de/search?q={}',
+    'mdn': 'https://developer.mozilla.org/en-US/search?q={}',
     'mw': 'https://mwmbl.org/?q={}',
     'om': 'https://www.openstreetmap.org/search?query={}',
     'ot': 'https://taginfo.openstreetmap.org/search?q={}',
@@ -37,12 +39,12 @@ c.url.searchengines = {
     'sp': 'https://www.startpage.com/do/search?query={}',
     'ta': 'https://ctan.org/search?phrase={}',
     'ug': 'https://www.ultimate-guitar.com/search.php?value={}',
+    'vd': 'file:///usr/share/doc/void/html/about/index.html?search={}',
     'wa': 'https://web.archive.org/web/*/{unquoted}',
     'wc': 'https://commons.wikimedia.org/wiki/Special:Search?search={}',
     'wd': 'https://www.wikidata.org/wiki/Special:Search?search={}',
     'wi': 'https://en.wikipedia.org/wiki/Special:Search?search={}',
     'yt': 'https://youtube.com/results?search_query={}',
-    'josm': 'https://josm.openstreetmap.de/search?q={}',
 }
 c.url.open_base_url = True # open searchengine base URL if no search phrase
 
@@ -61,7 +63,7 @@ c.fonts.web.size.default = 14
 # media
 config.bind(';v', 'hint links spawn mpv {hint-url}')
 config.bind(';m', 'hint links spawn yt-mpv {hint-url}')
-config.bind(';i', 'hint images spawn sh -c "curl -Lo /tmp/qb-img \'{hint-url}\' && nsxiv /tmp/qb-img"')
+config.bind(';i', 'hint images spawn sh -c \'curl -Lo /tmp/qb-img "{hint-url}" && nsxiv /tmp/qb-img\'')
 
 # general
 config.bind('pP', 'open -t -- {clipboard}')
@@ -72,6 +74,8 @@ config.bind('<Ctrl+k>', 'tab-move -')
 config.bind('<Alt+p>', 'spawn --userscript qute-pass -U secret -u "username: (.+)" -d dmenu')
 config.bind('<Ctrl-x>', 'download-open')
 config.bind('ZQ', 'close')
+config.bind('d', 'tab-close -o')
+config.bind('D', 'tab-close')
 
 # global dark theme
 c.colors.webpage.preferred_color_scheme = 'dark'
@@ -107,9 +111,6 @@ c.content.prefers_reduced_motion = True
 c.content.cookies.accept = 'no-3rdparty'
 config.set('content.cookies.accept', 'all', 'chrome-devtools://*')
 config.set('content.cookies.accept', 'all', 'devtools://*')
-
-c.content.headers.user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/{webkit_version} (KHTML, like Gecko) {upstream_browser_key}/{upstream_browser_version}'
-c.content.headers.accept_language = 'en-CA,en;q=0.5'
 
 c.url.yank_ignored_parameters = [
     'ref', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term',

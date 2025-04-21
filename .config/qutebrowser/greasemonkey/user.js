@@ -1,12 +1,17 @@
 // ==UserScript==
-// @name    Global user.js
+// @name    global (youtube iframe handler)
 // @include *
 // @run-at  document-start
+// @grant   GM_addStyle
 // ==/UserScript==
 
 // remove youtube embed iframes
+// TODO: doesn't work
 (function () {
 	'use strict';
+	document.addEventListener('DOMContentLoaded', (evt) => {
+		GM_addStyle(`:root { background-color: #2E3440; }`);
+	});
 
 	window.addEventListener('message', (evt) => {
 		if (evt.data.id === 'yt-replacer') {

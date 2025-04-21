@@ -1,37 +1,32 @@
 // ==UserScript==
-// @name        Reddit custom CSS
-// @namespace   https://github.com/olmokramer
-// @description Custom CSS for *.reddit.com
-// @include     *://*.reddit.com
-// @run-at      document-start
-// @version     2
-// @author      Olmo Kramer
+// @name        reddit.com
+// @include     *://*.reddit.com/*
+// @run-at      document-end
+// @grant       GM_addStyle
 // ==/UserScript==
 
 (function() {
-	'use strict';
+	GM_addStyle(`
+	body {
+		background-color: #2E3440;
+	}
 
-	alert('loading reddit CSS');
-	document.addEventListener('readystatechange', function onReadyStateChange() {
-		if (document.readyState == 'interactive') {
-			const style = document.createElement('style');
-			document.head.appendChild(style);
-			style.innerHTML = `
+	#header,#sr-header-area {
+		background-color: #3B4252;
+	}
 
-/* Sticky header. */
-#header {
-	position: sticky !important;
-	top: 0 !important;
-	z-index: 1000 !important;
-}
+	.thing .title {
+		color: #D8DEE9;
+	}
+	`);
 
-#sr-header-area {
-	position: relative !important;
-	z-index: 1000 !important;
-}
-
-			`;
-		}
+	// remove elements by class name
+	['promoted', 'promotedlink'].forEach((name) => {
+		let els = document.getElementsByClassName(name)
+		Array.from(els).forEach((el) => {
+			el.parentNode.removeChild(el);
+		});
 	});
-	console.log('done loading reddit CSS');
+	
+	console.log('[Reddit] Removed promotions');
 })();

@@ -1,6 +1,5 @@
 // ==UserScript==
-// @name        Remove Amazon spam
-// @description Remove sponsored listings
+// @name        amazon.ca
 // @include     *://*.amazon.ca/*
 // @run-at      document-end
 // ==/UserScript==

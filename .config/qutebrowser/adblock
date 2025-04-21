@@ -1,4 +1,15 @@
 ||discord.com/api/v*/science
 ||discord.com/assets/sentry.*.js
-||www.nytimes.com/ads.txt
+||discord.com/api/v*/premium-marketing
+||discord.com/api/v*/metrics
+||discord.com/api/v*/quests
+||nytimes.com/ads.txt
+||nytimes.com/statsig
+||beyondwickedmapping.org
+||privacymanager.io
 ||googlevideo.com
+||telemetryservice.brightspace.com
+||gstatic.com/cv/js/sender
+||gstatic.com/eureka
+||youtube.com/error_204
+||ggpht.com

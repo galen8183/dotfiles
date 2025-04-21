@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name        YAGPDB control panel custom Nord CSS
+// @name        yagpdb.xyz
 // @include     *://yagpdb.xyz/*
 // @run-at      document-end
 // @grant       GM_addStyle

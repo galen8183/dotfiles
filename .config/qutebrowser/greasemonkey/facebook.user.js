@@ -1,6 +1,5 @@
 // ==UserScript==
-// @name        Remove NYT distractions
-// @description Remove ads, offer popups, etc. on NY Times games
+// @name        facebook.com
 // @include     *://*.facebook.com/*
 // @run-at      document-idle
 // ==/UserScript==

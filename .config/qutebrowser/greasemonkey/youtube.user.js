@@ -1,6 +1,5 @@
 // ==UserScript==
-// @name        Remove YT distractions
-// @description Remove inline ads, shorts, promotional youtube series, etc.
+// @name        youtube.com
 // @include     *://www.youtube.com/*
 // @run-at      document-idle
 // ==/UserScript==
@@ -45,14 +44,14 @@ function onScroll() {
 	});
 
 	// remove elements by tag name
-	['ytd-ad-slot-renderer', 'ytd-rich-section-renderer', 'ytd-reel-shelf-renderer'].forEach((name) => {
+	['ytd-ad-slot-renderer'].forEach((name) => {
 		let els = document.getElementsByTagName(name)
 		Array.from(els).forEach((el) => {
 			el.parentNode.removeChild(el);
 		});
 	});
 
-	console.info('Removed distractions [YouTube]');
+	console.info('[YouTube] Removed distractions');
 }
 
 (async function () {
