@@ -38,6 +38,7 @@ export EDITOR="nvim"
 export BROWSER="qutebrowser"
 export MANPAGER="nvim +Man!"
 export PAGER="less"
+export PLAYER="mpv"
 
 # erase previous duplicate lines and omit lines beginning with space
 export HISTCONTROL="erasedups:ignorespace"
