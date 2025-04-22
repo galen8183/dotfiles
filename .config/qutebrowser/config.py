@@ -4,7 +4,7 @@
 # load config-cycle set options
 config.load_autoconfig(True)
 
-config.source('config/nord/nord-qutebrowser.py')
+config.source('config/nord.py')
 config.source('config/debloat.py')
 
 c.confirm_quit = ['multiple-tabs', 'downloads']
