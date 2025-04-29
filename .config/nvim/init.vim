@@ -8,6 +8,7 @@ colorscheme nord
 set number
 set relativenumber
 set nowrap
+set cursorline
 
 set nohlsearch
 set ignorecase

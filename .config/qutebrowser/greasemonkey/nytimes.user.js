@@ -25,7 +25,7 @@ function main() {
 		});
 	});
 
-	console.info('Removed distractions [NYTimes]');
+	console.info('[NYTimes] Removed distractions');
 }
 
 main()

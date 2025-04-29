@@ -15,7 +15,7 @@ EOF
 }
 
 JAVA=/usr/lib/jvm/openjdk21/bin/java
-JOSM_JAR="$XDG_DATA_HOME/applications/josm-tested.jar"
+JOSM_JAR="$XDG_DATA_HOME/applications/josm-latest.jar"
 JOSM_CMD="$JAVA
 			--module-path /usr/local/lib/javafx-sdk-23.0.1/lib --add-modules=ALL-MODULE-PATH
 			--add-exports=java.base/sun.security.action=ALL-UNNAMED
@@ -34,7 +34,7 @@ case "$1" in
 		OLDVER=$(version)
 		echo checking for update...
 		curl -s -o "$JOSM_JAR" -z "$JOSM_JAR" \
-			"https://josm.openstreetmap.de/download/josm-tested.jar"
+			"https://josm.openstreetmap.de/download/josm-latest.jar"
 		VER=$(version)
 		[ "$OLDVER" = "$VER" ] && echo "No new version (already $VER)" || \
 			echo "updated from $OLDVER to $VER"

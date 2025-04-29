@@ -65,19 +65,19 @@ config.bind(';m', 'hint links spawn yt-mpv {hint-url}')
 config.bind(';i', 'hint images spawn sh -c \'curl -Lo /tmp/qb-img "{hint-url}" && nsxiv /tmp/qb-img\'')
 
 # general
+config.bind('<Alt-f>', 'hint all tab-fg')
 config.bind('pP', 'open -t -- {clipboard}')
-config.bind('<Ctrl+a>', 'mode-enter caret')
-config.bind(';;', 'hint all right-click')
 config.bind('<Ctrl+j>', 'tab-move +')
 config.bind('<Ctrl+k>', 'tab-move -')
-config.bind('<Alt+p>', 'spawn --userscript qute-pass -U secret -u "username: (.+)" -d dmenu')
+config.bind('<Ctrl+a>', 'mode-enter caret')
+config.bind(';;', 'hint all right-click')
 config.bind('<Ctrl-x>', 'download-open')
 config.bind('ZQ', 'close')
-config.bind('d', 'tab-close -o')
-config.bind('D', 'tab-close')
+config.bind(',ce', 'config-edit')
+config.bind(',cs', 'config-source')
+config.bind('<Alt+p>', 'spawn --userscript qute-pass -U secret -u "username: (.+)" -d dmenu')
 
 # global dark theme
-c.colors.webpage.preferred_color_scheme = 'dark'
 c.colors.webpage.darkmode.enabled = True
 c.colors.webpage.darkmode.algorithm = 'lightness-hsl'
 c.colors.webpage.darkmode.policy.images = 'never'
@@ -99,3 +99,4 @@ c.content.webgl = True
 c.content.unknown_url_scheme_policy = 'disallow'
 c.content.tls.certificate_errors = 'ask-block-thirdparty'
 c.content.webrtc_ip_handling_policy = 'disable-non-proxied-udp'
+c.content.xss_auditing = True

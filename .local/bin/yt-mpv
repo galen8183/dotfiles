@@ -14,15 +14,15 @@ mpv wrapper tailored to watching youtube videos.
 yt-dlp integration to mark videos as watched.
 
 Options:
-  -v, --verbose        be more verbose
-  -q, --quiet          supress most messages
-  -m, --mpv-opt        pass option to mpv
-  -x, --no-video       disable video playback
-  -t, --thumbnail      only show video thumbnail
-  -n, --no-watch       don't mark VIDEO as watched
-  -w, --mark-watched   mark VIDEO as watched and exit
-	-d, --mpris          start an MPRIS D-Bus interface
-  -h, --help       display this help and exit
+  -v, --verbose       be more verbose
+  -q, --quiet         supress most messages
+  -m, --mpv-opt       pass option to mpv
+  -x, --no-video      disable video playback
+  -t, --thumbnail     only show video thumbnail
+  -n, --no-watch      don't mark VIDEO as watched
+  -w, --mark-watched  mark VIDEO as watched and exit
+  -d, --mpris         start an MPRIS D-Bus interface
+  -h, --help          display this help and exit
 EOF
 	exit 0
 }

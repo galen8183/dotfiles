@@ -1,18 +1,37 @@
 // ==UserScript==
-// @name    global (youtube iframe handler)
+// @name    global
 // @include *
 // @run-at  document-start
 // @grant   GM_addStyle
 // ==/UserScript==
 
-// remove youtube embed iframes
-// TODO: doesn't work
+'use strict';
+
 (function () {
-	'use strict';
+	// use nord0 as default BG
 	document.addEventListener('DOMContentLoaded', (evt) => {
-		GM_addStyle(`:root { background-color: #2E3440; }`);
+		GM_addStyle(`
+		* { font-family: monospace; }
+
+		html body {
+			background-color: #2E3440 !important;
+			font-size: 16px;
+		}
+
+		/* mediawiki tweaks */
+		.mw-page-container { background-color: #2E3440; }
+		.mw-body { background-color: #2E3440; }
+		#mw-page-base {
+			background-color: #242933;
+			background-image: unset;
+		}
+		.valuedescription { background-color: #242933 !important; }
+		.wikitable { background-color: #3B4252; }
+		`);
 	});
 
+	// remove youtube embed iframes
+	// TODO: doesn't work
 	window.addEventListener('message', (evt) => {
 		if (evt.data.id === 'yt-replacer') {
 			if (evt.data.found) {
@@ -20,11 +39,11 @@
 				return;
 			}
 
-			console.log(`[YouTube] attempting to find player iframe`);
+			console.log('[YouTube] attempting to find player iframe');
 			findFrame(evt);
 		}
 	});
-})()
+})();
 
 function replace(data) {
 	const replacement = document.createElement('a');
