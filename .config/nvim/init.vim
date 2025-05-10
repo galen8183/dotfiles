@@ -36,12 +36,12 @@ set showmode
 set ruler
 
 " -- tab/split nav --
-map <M-j> gt
-map <M-k> gT
-map <C-h> <C-w>h
-map <C-j> <C-w>j
-map <C-k> <C-w>k
-map <C-l> <C-w>l
+nnoremap <M-j> gt
+nnoremap <M-k> gT
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
 
 " -- sys clipboard --
 map <leader>y "+y
@@ -49,35 +49,16 @@ map <leader>p "+p
 map <leader>P "+P
 map <leader>a :%y+<CR>
 
+" -- write without quitting --
+nnoremap ZW :write<cr>
+
 filetype plugin indent on
-autocmd FileType sh,tex setl textwidth=80 formatoptions=jtq
-" xbps templates filetype=sh
-autocmd BufNewFile,BufRead ~/src/void-packages/srcpkgs/*/template setl ft=sh
-
-" -- LSP --
-lua <<
-	require'lspconfig'.gopls.setup{}
-	require'lspconfig'.texlab.setup{}
-.
-
-" -- vsnip --
-let g:vsnip_snippet_dir = '~/.config/nvim/vsnip'
-" Expand
-imap <expr> <C-j>   vsnip#expandable()  ? '<Plug>(vsnip-expand)'         : '<C-j>'
-smap <expr> <C-j>   vsnip#expandable()  ? '<Plug>(vsnip-expand)'         : '<C-j>'
-imap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
-smap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
-imap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
-smap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
-imap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
-smap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
-" Select or cut text to use as $TM_SELECTED_TEXT in the next snippet.
-xmap        s   <Plug>(vsnip-cut-text)
-xmap        S   <Plug>(vsnip-select-text)
+" recognise xbps template shell scripts
+autocmd BufNewFile,BufRead ~/src/void-packages/srcpkgs/*/template setl filetype=sh
 
 set spelllang=en
-nnoremap <silent> <F11> :set spell!<cr>
-inoremap <silent> <F11> <C-O>:set spell!<cr>
+nnoremap <silent> <F11> :setlocal spell!<cr>
+inoremap <silent> <F11> <C-O>:setlocal spell!<cr>
 
 let timeoutlen = 1500           " wait for 1.5s before which-key dialog
 let g:netrw_liststyle = 3       " tree style listing
@@ -85,11 +66,6 @@ let g:yagpdbcc_override_ft = 1  " also detect .go.tmpl .gotmpl
 
 " -- shellcheck --
 map <leader>s :w \| !shellcheck -x %:p<CR>
-
-" -- VimTeX --
-let g:vimtex_view_method = 'zathura'
-let g:vimtex_doc_handlers = ['vimtex#doc#handlers#texdoc']
-let g:vimtex_delim_list = {'delim_tex':{'name':[['`', "'"]]}} " LaTeX style `quotes'
 
 " -- csv.vim --
 let g:csv_default_delim = ','
