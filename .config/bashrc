@@ -30,6 +30,9 @@ alias gco='git checkout'
 alias  gd='git diff'
 alias gsw='git switch'
 
+alias  mount='udevil mount'
+alias umount='udevil umount'
+
 # coerce XDG compliancy
 alias     wget='wget --hsts-file="$XDG_DATA_HOME/wget-hsts"'
 alias     lmms='lmms --config "$XDG_CONFIG_HOME/lmmsrc.xml"'
