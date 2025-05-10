@@ -17,10 +17,10 @@ main() {
 	fi
 
 	weather
-	#battery
+	battery
 
-	printf 'LAST_RUN=%d\nWEATHER="%s"\nLAST_WEATHER_UPDATE=%d\n' \
-		"$LAST_RUN" "$WEATHER" "$LAST_WEATHER_UPDATE" \
+	printf 'LAST_RUN=%d\nWEATHER="%s"\nLAST_WEATHER_UPDATE=%d\nBATTERY="%s"\nBAT_STATUS=%d\n' \
+		"$LAST_RUN" "$WEATHER" "$LAST_WEATHER_UPDATE" "$BATTERY" "$BAT_STATUS" \
 		> "/tmp/dwmstatus"
 }
 
@@ -54,7 +54,7 @@ battery () {
 	esac
 	[ "$(cat ./AC/online)" -eq 1 ] && COLOUR="$STATUS_BLUE"
 
-	BATTERY="Bat: $COLOUR$PERC%$STATUS_RESET"
+	export BATTERY="Bat: $COLOUR$PERC%$STATUS_RESET"
 }
 
 # approximate locations only :-)
@@ -76,14 +76,16 @@ weather () {
 		[ -n "$W" ] && W="$STATUS_YELLOW$W$STATUS_RESET"
 	fi
 
-	if [ -z "$W" || "${W%;*}" = "Unknown location" ]; then
-		WEATHER="$STATUS_BLACK${WEATHER:-"Error fetching weather report"}$STATUS_RESET"
+	if [ -z "$W" ] || [ "${W%;*}" = "Unknown location" ]; then
+		export WEATHER="$STATUS_BLACK${WEATHER:-"Error fetching weather report"}$STATUS_RESET"
 		return
 	fi
 
-	WEATHER="$W"
-	LAST_WEATHER_UPDATE="$LAST_RUN"
+	export WEATHER="$W"
+	export LAST_WEATHER_UPDATE="$LAST_RUN"
 }
+
+[ "$DWMSTATUS_DEBUG" = 2 ] && set -x
 
 touch /tmp/dwmstatus
 . /tmp/dwmstatus
@@ -97,8 +99,8 @@ case "$1" in
 			MPRIS="$(mpris-ctl info '%track_name - %artist_name' 2>/dev/null)"
 			[ "$MPRIS" = "" ] && MPRIS="${STATUS_BLACK}n/a${STATUS_RESET}"
 
-			xsetroot -name " $MPRIS | Vol: $VOL | $WEATHER | $DATE " || exit 1
-			#xsetroot -name " $MPRIS | Vol: $VOL | $BATTERY | $WEATHER | $DATE " || exit 1
+			#xsetroot -name " $MPRIS | Vol: $VOL | $WEATHER | $DATE " || exit 1
+			xsetroot -name " $MPRIS | Vol: $VOL | $BATTERY | $WEATHER | $DATE " || exit 1
 			sleep 1; SECS=$(( SECS + 1 ))
 		done
 		;;
@@ -106,6 +108,10 @@ case "$1" in
 		main
 		echo $WEATHER
 		[ -t 0 ] && date -Iseconds -d "@$LAST_WEATHER_UPDATE"
+		;;
+	battery)
+		main
+		echo $BATTERY
 		;;
 	*) # err
 		echo invalid argument "$1"
