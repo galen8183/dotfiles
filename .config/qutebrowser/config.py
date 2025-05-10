@@ -32,6 +32,7 @@ c.url.searchengines = {
     'bc': 'https://bandcamp.com/search?q={}',
     'bs': 'https://baresearch.org/search?q={}',
     'di': 'https://en.wiktionary.org/wiki/Special:Search?search={}',
+    'do': 'http://dict.org/bin/Dict?Database=all&Form=Dict2&Query={}',
     'gh': 'https://github.com/search?q={}',
     'josm': 'https://josm.openstreetmap.de/search?q={}',
     'mdn': 'https://developer.mozilla.org/en-US/search?q={}',
@@ -100,3 +101,4 @@ c.content.unknown_url_scheme_policy = 'disallow'
 c.content.tls.certificate_errors = 'ask-block-thirdparty'
 c.content.webrtc_ip_handling_policy = 'disable-non-proxied-udp'
 c.content.xss_auditing = True
+c.content.headers.user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/{webkit_version} (KHTML, like Gecko) {upstream_browser_key}/{upstream_browser_version} Safari/{webkit_version}'
