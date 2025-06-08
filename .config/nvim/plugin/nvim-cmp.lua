@@ -39,5 +39,6 @@ local nvim_lsp = require('lspconfig')
 
 nvim_lsp['gopls'].setup{capabilities = capabilities}
 nvim_lsp['texlab'].setup{capabilities = capabilities}
+nvim_lsp['pylsp'].setup{capabilities = capabilities}
 
 vim.keymap.set('c', '<tab>', '<C-z>', { silent = false }) -- fix cmd mode completion
