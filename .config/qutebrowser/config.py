@@ -29,6 +29,7 @@ c.editor.command = ['st', '-e', 'nvim', '{}']
 # Search engines which can be used via the address bar.
 c.url.searchengines = {
     'DEFAULT': 'https://duckduckgo.com/?q={}',
+    'aw': 'https://wiki.archlinux.org/index.php?search={}',
     'bc': 'https://bandcamp.com/search?q={}',
     'bs': 'https://baresearch.org/search?q={}',
     'di': 'https://en.wiktionary.org/wiki/Special:Search?search={}',
@@ -52,7 +53,7 @@ c.url.searchengines = {
 }
 c.url.open_base_url = True # open searchengine base URL if no search phrase
 
-c.zoom.default = '80%'
+c.zoom.default = '90%'
 c.zoom.levels = ['25%', '33%', '50%', '67%', '75%', '80%', '90%', '100%',
                  '110%', '125%', '150%', '175%', '200%', '250%', '300%',
                  '400%', '500%']
@@ -76,7 +77,7 @@ config.bind('<Ctrl-x>', 'download-open')
 config.bind('ZQ', 'close')
 config.bind(',ce', 'config-edit')
 config.bind(',cs', 'config-source')
-config.bind('<Alt+p>', 'spawn --userscript qute-pass -U secret -u "username: (.+)" -d dmenu')
+config.bind('<Alt+p>', 'spawn --userscript qute-pass -U secret -u "user(?:name)?: (.+)" -d dmenu')
 
 # global dark theme
 c.colors.webpage.darkmode.enabled = True
