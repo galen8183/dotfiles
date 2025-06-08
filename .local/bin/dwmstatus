@@ -1,5 +1,20 @@
 #!/bin/sh
 
+usage () {
+	cat 1>&2 <<EOF
+$0 [option...]
+Simple text status bar for DWM, also allowing retrieval of individual system
+information snippets
+
+Options:
+  -h  display this help and exit
+  -v  enable verbose output
+  -d  enable debug logging (\`set -x\`)
+  -b  retrieve battery percentage, handling status notifications
+  -w  retrieve weather from wttr.in
+EOF
+}
+
 STATUS_BLACK="$(printf "%b" "\033[90m")"
 STATUS_RED="$(printf "%b" "\033[31m")"
 STATUS_YELLOW="$(printf "%b" "\033[33m")"
@@ -8,27 +23,33 @@ STATUS_GREY="$(printf "%b" "\033[37m")"
 STATUS_RESET="$(printf "%b" "\033[0m")"
 
 main() {
-	LAST_RUN="$(date "+%s")"
+	NOW="$(date "+%s")"
 	if [ "$(printf "%c" "$WEATHER")" = "$(printf "\033")" ]; then
 		SECS=$(( LAST_WEATHER_UPDATE + 1800 ))
-		[ $SECS -lt $LAST_RUN ] && SECS=0
+		[ "$SECS" -lt "$NOW" ] && SECS=0
 	else
-		[ $(( LAST_WEATHER_UPDATE + WEATHER_FREQ )) -lt $LAST_RUN ] && SECS=0
+		[ $(( LAST_WEATHER_UPDATE + WEATHER_FREQ )) -lt "$NOW" ] && SECS=0
 	fi
 
 	weather
 	battery
 
-	printf 'LAST_RUN=%d\nWEATHER="%s"\nLAST_WEATHER_UPDATE=%d\nBATTERY="%s"\nBAT_STATUS=%d\n' \
-		"$LAST_RUN" "$WEATHER" "$LAST_WEATHER_UPDATE" "$BATTERY" "$BAT_STATUS" \
-		> "/tmp/dwmstatus"
+	cat > /tmp/dwmstatus <<EOF
+LAST_RUN=$NOW
+WEATHER="$WEATHER"
+LAST_WEATHER_UPDATE=$LAST_WEATHER_UPDATE
+BATTERY="$BATTERY"
+BAT_STATUS=$BAT_STATUS
+BAT_NOTIF_ID=$BAT_NOTIF_ID
+EOF
+
 }
 
 BATTERY=0
 BAT_STATUS=1
 battery () {
-	[ $(( SECS % 10 )) -ne 0 ] && return
-	[ -n "$DWMSTATUS_DEBUG" ] && echo "[$(date -Ins)] Updating battery status"
+	[ $(( LAST_RUN % 10 )) -ne 0 ] && printf "%s\n%s" "$SECS" "$LAST_RUN" > /tmp/dwmstatus-dbg && return
+	[ -n "$DWMSTATUS_DEBUG" ] && echo "[$(date -Is)] Updating battery status"
 	cd /sys/class/power_supply || return
 
 	TOTAL=0
@@ -39,34 +60,41 @@ battery () {
 	done
 	PERC=$(( TOTAL / BATN ))
 
-	case "$PERC" in
-		[5-9]?|100)
-			COLOUR="$STATUS_GREY" BAT_STATUS=1
-			;;
-		1[5-9]|[2-4]?)
-			[ $BAT_STATUS != 0 ] && notify-send "Battery below 50%"
-			COLOUR="$STATUS_YELLOW" BAT_STATUS=0
-			;;
-		*)
-			[ $BAT_STATUS != -1 ] && notify-send -u=critical "Battery low (below 15%)"
-			COLOUR="$STATUS_RED" BAT_STATUS=-1
-			;;
-	esac
-	[ "$(cat ./AC/online)" -eq 1 ] && COLOUR="$STATUS_BLUE"
+	if [ "$(cat ./AC/online)" -eq 1 ]; then
+		[ "$BAT_NOTIF_ID" ] && notify-send -r "$BAT_NOTIF_ID" -t 0 "" # clear persistent notif
+		BAT_NOTIF_ID=
+		COLOUR="$STATUS_BLUE"
+	else
+		case "$PERC" in
+			[5-9]?|100)
+				COLOUR="$STATUS_GREY" BAT_STATUS=1
+				;;
+			1[5-9]|[2-4]?)
+				[ $BAT_STATUS -ne 0 ] && notify-send "Battery below 50%"
+				COLOUR="$STATUS_YELLOW" BAT_STATUS=0
+				;;
+			*)
+				[ $BAT_STATUS -ne -1 ] && \
+					BAT_NOTIF_ID="$(notify-send --print-id -u critical "Battery low" "Battery below 15%, charge now!")"
+				COLOUR="$STATUS_RED" BAT_STATUS=-1
+				;;
+		esac
+	fi
 
 	export BATTERY="Bat: $COLOUR$PERC%$STATUS_RESET"
 }
 
 # approximate locations only :-)
-COORDS="43.4,-80.4"
-#COORDS="44.2,-80.2"
+#COORDS="43.4,-80.4"
+COORDS="44.2,-80.2"
 
 # seconds between weather updates
 WEATHER_FREQ=3600
 LAST_WEATHER_UPDATE=
 weather () {
 	[ $(( SECS % WEATHER_FREQ )) -ne 0 ] && return
-	[ -n "$DWMSTATUS_DEBUG" ] && echo "[$(date -Ins)] Updating weather information"
+	[ -n "$DWMSTATUS_DEBUG" ] && echo "[$(date -Is)] Updating weather information"
+	export LAST_WEATHER_UPDATE="$LAST_RUN"
 
 	W=$(curl -fGs --data-urlencode "format=%C %t (%f) %w %m" "wttr.in/$COORDS?m")
 
@@ -82,39 +110,35 @@ weather () {
 	fi
 
 	export WEATHER="$W"
-	export LAST_WEATHER_UPDATE="$LAST_RUN"
 }
 
-[ "$DWMSTATUS_DEBUG" = 2 ] && set -x
-
-touch /tmp/dwmstatus
-. /tmp/dwmstatus
+[ -f /tmp/dwmstatus ] && . /tmp/dwmstatus
 SECS="$LAST_RUN"
-case "$1" in
-	"") # run own main loop
-		while true; do
-			main
-			VOL="$(amixer sget Master | awk -F"[][]" '/%/ { print $2 }' | head -n1)"
-			DATE="$(date +"%a %F %T")"
-			MPRIS="$(mpris-ctl info '%track_name - %artist_name' 2>/dev/null)"
-			[ "$MPRIS" = "" ] && MPRIS="${STATUS_BLACK}n/a${STATUS_RESET}"
 
-			#xsetroot -name " $MPRIS | Vol: $VOL | $WEATHER | $DATE " || exit 1
-			xsetroot -name " $MPRIS | Vol: $VOL | $BATTERY | $WEATHER | $DATE " || exit 1
-			sleep 1; SECS=$(( SECS + 1 ))
-		done
-		;;
-	weather) # print weather to stdout, and last update time in terminal
+if [ $# -eq 0 ]; then
+	while true; do
 		main
-		echo $WEATHER
-		[ -t 0 ] && date -Iseconds -d "@$LAST_WEATHER_UPDATE"
-		;;
-	battery)
-		main
-		echo $BATTERY
-		;;
-	*) # err
-		echo invalid argument "$1"
-		exit 1
-		;;
-esac
+		VOL="$(amixer sget Master | awk -F"[][]" '/%/ { print $2 }' | head -n1)"
+		DATE="$(date +"%a %F %T")"
+		MPRIS="$(mpris-ctl info '%track_name - %artist_name' 2>/dev/null)"
+		[ "$MPRIS" = "" ] && MPRIS="${STATUS_BLACK}n/a${STATUS_RESET}"
+
+		#xsetroot -name " $MPRIS | Vol: $VOL | $WEATHER | $DATE " || exit 1
+		xsetroot -name " $MPRIS | Vol: $VOL | $BATTERY | $WEATHER | $DATE " || exit 1
+		sleep 1; SECS=$(( SECS + 1 ))
+	done
+fi
+
+while getopts "hvdwb" opt; do
+	case "$opt" in
+		h|\?) usage ;;
+		v) DWMSTATUS_DEBUG=1 ;;
+		d) DWMSTATUS_DEBUG=1; set -x ;;
+		b) main; echo "$BATTERY" ;;
+		w) # print weather to stdout, and last update time in terminal
+			main
+			echo "$WEATHER"
+			[ -t 0 ] && date -Iseconds -d "@$LAST_WEATHER_UPDATE"
+			;;
+	esac
+done
