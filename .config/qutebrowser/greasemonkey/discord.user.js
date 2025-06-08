@@ -44,6 +44,14 @@
 			content: ":";
 			color: white;
 		}
+
+		/* hide useless buttons */
+		button[aria-label="Send a gift"] {
+			display: none !important;
+		}
+		.channelAppLauncher_e6e74f {
+			display: none !important;
+		}
 	`);
 	console.info('[Discord] added user CSS');
 })();
