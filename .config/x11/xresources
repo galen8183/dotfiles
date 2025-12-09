@@ -1,2 +1,5 @@
-*window.background: #2e3440
-*window.foreground: #d8dee9
+! Default font+size
+*.font: monospace:size=10
+
+! Nord theme https://github.com/nordtheme/xresources
+#include "/home/galen/.config/x11/nord-xresources"
