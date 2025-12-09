@@ -1,4 +1,6 @@
 set hidden
+set previewer ~/.config/lf/previewer
+set cleaner ~/.config/lf/cleaner
 
 map y
 map yy copy
@@ -7,3 +9,5 @@ map yn $basename -a -- $fx | head -c-1 | xclip -sel clip
 map yd $dirname -- "$f"    | head -c-1 | xclip -sel clip
 
 map ' ' select
+
+map <c-n> $nsxiv "$( { [ -d "$f" ] && echo "$f"; } || dirname "$f")"
