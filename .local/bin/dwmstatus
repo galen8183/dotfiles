@@ -1,5 +1,7 @@
 #!/bin/sh
 
+[ "$DWMSTATUS_DEBUG" = 2 ] && set -x
+
 STATUS_BLACK="$(printf "%b" "\033[90m")"
 STATUS_RED="$(printf "%b" "\033[31m")"
 STATUS_YELLOW="$(printf "%b" "\033[33m")"
@@ -58,7 +60,7 @@ battery () {
 }
 
 # approximate locations only :-)
-COORDS="43.4,-80.4"
+COORDS="YKF"
 #COORDS="44.2,-80.2"
 
 # seconds between weather updates
@@ -68,17 +70,16 @@ weather () {
 	[ $(( SECS % WEATHER_FREQ )) -ne 0 ] && return
 	[ -n "$DWMSTATUS_DEBUG" ] && echo "[$(date -Ins)] Updating weather information"
 
-	W=$(curl -fGs --data-urlencode "format=%C %t (%f) %w %m" "wttr.in/$COORDS?m")
+	W=$(curl -fGs --data-urlencode "format=%C %t (%f) %w %m" "wttr.in/$COORDS")
 
 	if [ "${W%;*}" = "Unknown location" ]; then
 		# Try again with coords given after '~'
-		W=$(curl -fGs --data-urlencode "format=%C %t (%f) %w %m" "wttr.in/${W#*~}?m")
+		W=$(curl -fGs --data-urlencode "format=%C %t (%f) %w %m" "wttr.in/${W#*~}")
 		[ -n "$W" ] && W="$STATUS_YELLOW$W$STATUS_RESET"
 	fi
 
-	if [ -z "$W" || "${W%;*}" = "Unknown location" ]; then
-		WEATHER="$STATUS_BLACK${WEATHER:-"Error fetching weather report"}$STATUS_RESET"
-		return
+	if [ -z "$W" -o "${W%;*}" = "Unknown location" ]; then
+		W="$STATUS_BLACK${WEATHER:-"Error fetching weather report"}$STATUS_RESET"
 	fi
 
 	WEATHER="$W"
