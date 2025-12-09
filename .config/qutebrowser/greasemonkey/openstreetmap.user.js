@@ -26,14 +26,17 @@ function inject() {
 	let details
 
 	if (type !== "user") {
-		let browse = document.querySelector(".browse-section");
-		browse.insertAdjacentHTML("afterbegin", "<ul></ul>");
-		details = browse.querySelector("ul");
-	} else {
-		details = document.querySelector(".secondary-actions > ul");
+		let table = document.querySelector(".changeset_line,.details");
+		table.insertAdjacentHTML("afterend", "<ul></ul>");
+		details = table.parentElement.querySelector("ul");
 	}
 
 	if (type === "user") {
+		if (location.pathname.endsWith("history")) {
+			return;
+		}
+
+		details = document.querySelector(".secondary-actions > ul");
 		let uid = document.querySelector("head").dataset.user;
 		for (const li of details.children) {
 			const child = li.firstElementChild
