@@ -2,4 +2,4 @@
 *.font: monospace:size=10
 
 ! Nord theme https://github.com/nordtheme/xresources
-#include "/home/galen/.config/x11/nord-xresources"
+#include "/home/galen/.config/x11/nord-xresources/src/nord"
