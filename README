@@ -1,2 +1,6 @@
 My dotfiles tracked in a (XDG base dir compliant) git repo, similar to
 https://drewdevault.com/2019/12/30/dotfiles.html
+
+This repo's files are stored in .config/dotfiles
+Repo management is done exclusively with the .local/bin/cfg script to keep
+all extraneous files out of the home directory
