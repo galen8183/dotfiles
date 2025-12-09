@@ -1,0 +1,7 @@
+#!/bin/sh
+
+qbtmpdir="$(find /tmp -name qutebrowser-* -printf "%p" -quit)"
+tmpfile="$qbtmpdir/img-$(date +%s)"
+
+curl -Lo "$tmpfile" "$QUTE_URL"
+nsxiv "$tmpfile"

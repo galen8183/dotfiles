@@ -29,12 +29,14 @@ c.editor.command = ['st', '-e', 'nvim', '{}']
 # Search engines which can be used via the address bar.
 c.url.searchengines = {
     'DEFAULT': 'https://duckduckgo.com/?q={}',
+    'aw': 'https://wiki.archlinux.org/title/Special:Search?search={}',
     'bc': 'https://bandcamp.com/search?q={}',
     'bs': 'https://baresearch.org/search?q={}',
     'di': 'https://en.wiktionary.org/wiki/Special:Search?search={}',
     'do': 'http://dict.org/bin/Dict?Database=all&Form=Dict2&Query={}',
     'gh': 'https://github.com/search?q={}',
     'josm': 'https://josm.openstreetmap.de/search?q={}',
+    'mb': 'https://musicbrainz.org/search?query={}',
     'mdn': 'https://developer.mozilla.org/en-US/search?q={}',
     'mw': 'https://mwmbl.org/?q={}',
     'om': 'https://www.openstreetmap.org/search?query={}',
@@ -63,7 +65,7 @@ c.fonts.web.size.default = 14
 # media
 config.bind(';v', 'hint links spawn mpv {hint-url}')
 config.bind(';m', 'hint links spawn yt-mpv {hint-url}')
-config.bind(';i', 'hint images spawn sh -c \'curl -Lo /tmp/qb-img "{hint-url}" && nsxiv /tmp/qb-img\'')
+config.bind(';i', 'hint images userscript nsxiv')
 
 # general
 config.bind('<Alt-f>', 'hint all tab-fg')
