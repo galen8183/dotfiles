@@ -5,3 +5,5 @@
 --no-playlist
 --cookies-from-browser "chromium:$XDG_DATA_HOME/qutebrowser"
 --format 'bv*[height<=1080]+ba/b'
+
+--extractor-args "youtube:player_js_version=actual"
