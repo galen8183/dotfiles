@@ -10,6 +10,8 @@
 	GM_addStyle(`
 		:root {
 			--custom-app-top-bar-height: 0px;
+			--custom-chat-input-margin-bottom: 0px !important;
+
 			--font-primary: Monospace;
 			font-size: 15px !important;
 		}
@@ -32,6 +34,14 @@
 		/* smaller message input textarea */
 		.visual-refresh {
 			--custom-channel-textarea-text-area-height: calc(32px + var(--space-xs));
+		}
+
+		/* reduce chat spacing */
+		.attachWrapper__0923f {
+			padding: 4px 0 0 2px !important;
+		}
+		.align-chat-input .scrollerSpacer__36d07 {
+			height: 30px !important;
 		}
 
 		/* reduce margin to bottom of window */
