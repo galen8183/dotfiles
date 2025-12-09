@@ -7,9 +7,15 @@ for f in $CFG_FILES; do
 	cp "$CFG_DIR/$f" "$HOME/$f" 2>/dev/null # silence error on first invocation
 done
 
-case "$1" in
+CMD="$1"
+[ -n "$CMD" ] && shift
+case "$CMD" in
 	"") set -- status ;;
 	"i") set -- status --ignored ;;
+	"a") set -- add "$@" ;;
+	"c") set -- commit "$@" ;;
+	"d") set -- diff "$@" ;;
+	*) set -- "$CMD" "$@" ;;
 esac
 
 git --git-dir="$CFG_DIR/repo.git" --work-tree="$HOME" "$@"
