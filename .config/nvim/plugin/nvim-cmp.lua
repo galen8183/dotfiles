@@ -17,6 +17,7 @@ cmp.setup({
 		['<C-e>'] = cmp.mapping.abort(),
 		['<CR>'] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
 	}),
+
 	sources = cmp.config.sources({
 		{ name = 'nvim_lsp' },
 		{ name = 'vsnip' },
@@ -39,5 +40,6 @@ local nvim_lsp = require('lspconfig')
 
 nvim_lsp['gopls'].setup{capabilities = capabilities}
 nvim_lsp['texlab'].setup{capabilities = capabilities}
+nvim_lsp['ccls'].setup{capabilities = capabilities}
 
 vim.keymap.set('c', '<tab>', '<C-z>', { silent = false }) -- fix cmd mode completion
