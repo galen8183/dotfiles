@@ -1,22 +1,20 @@
 #!/bin/sh
-echo foo
 
 # map caps lock to esc
 setxkbmap -option caps:escape
 
 xrandr --auto \
-	 --output DP-2 --primary --right-of DP-3
+	 --output DP-3 --primary --right-of DP-2
 
-[ -f "$XDG_CONFIG_HOME/x11/xresources" ] && xrdb -merge "$XDG_CONFIG_HOME/x11/xresources"
+[ -f "${XDG_CONFIG_HOME:=$HOME/.config}/x11/xresources" ] && xrdb -merge "$XDG_CONFIG_HOME/x11/xresources"
 
-# notification daemon for notify-send
-exec dunst &
+eval "$(dbus-launch --exit-with-x11 --sh-syntax)"
 
-# dwm status bar script
-#/home/galen/.local/bin/dwmstatus &
-slstatus &
+autostart="xcompmgr-simple-opacity dunst slstatus sxhkd randwall rescrobbled-monitor"
 
-#rescrobbled &
+for program in $autostart; do
+	pidof -sx "$program" && continue
+	"$program" > "${XDG_CACHE_HOME:-$HOME/.cache}/autostart.log/$program" 2>&1 &
+done >/dev/null 2>&1
 
-#exec dbus-launch --exit-with-session dwm
 dwm
