@@ -36,10 +36,9 @@ cmp.setup.cmdline({ '/', '?' }, {
 
 -- Set up lspconfig.
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
-local nvim_lsp = require('lspconfig')
 
-nvim_lsp['gopls'].setup{capabilities = capabilities}
-nvim_lsp['texlab'].setup{capabilities = capabilities}
-nvim_lsp['ccls'].setup{capabilities = capabilities}
+vim.lsp.config('gopls',  {capabilities = capabilities})
+vim.lsp.config('texlab', {capabilities = capabilities})
+vim.lsp.config('ccls',   {capabilities = capabilities})
 
 vim.keymap.set('c', '<tab>', '<C-z>', { silent = false }) -- fix cmd mode completion
