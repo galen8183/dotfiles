@@ -78,7 +78,7 @@ config.bind('<Ctrl-x>', 'download-open')
 config.bind('ZQ', 'close')
 config.bind(',ce', 'config-edit')
 config.bind(',cs', 'config-source')
-config.bind('<Alt+p>', 'spawn --userscript qute-pass -U secret -u "username: (.+)" -d dmenu')
+config.bind('<Alt+p>', 'spawn --userscript qute-pass -U secret -u "user(?:name)?: (.+)" -d dmenu')
 
 # global dark theme
 c.colors.webpage.darkmode.enabled = True
