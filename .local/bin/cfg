@@ -11,11 +11,15 @@ CMD="$1"
 [ -n "$CMD" ] && shift
 case "$CMD" in
 	"") set -- status ;;
-	"i") set -- status --ignored ;;
-	"a") set -- add "$@" ;;
-	"c") set -- commit "$@" ;;
-	"d") set -- diff "$@" ;;
-	*) set -- "$CMD" "$@" ;;
+	i)  set -- status --ignored ;;
+	a)  set -- add "$@" ;;
+	c)  set -- commit "$@" ;;
+	ca) set -- commit --amend "$@" ;;
+	d)  set -- diff "$@" ;;
+	l)  set -- log "$@" ;;
+	s)  set -- submodule "$@" ;;
+	su) set -- submodule --remote "$@" ;;
+	*)  set -- "$CMD" "$@" ;;
 esac
 
 git --git-dir="$CFG_DIR/repo.git" --work-tree="$HOME" "$@"
