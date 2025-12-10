@@ -1,77 +1,87 @@
 #!/bin/sh
-# record uses ffmpeg to record session audio and/or video
-# see 'record --help' for more information
 
 die () {
-	printf "%s\nTry 'record --help' for more information.\n" "$1" 1>&2
+	printf "%s\nTry '$0 -h' for more information.\n" "$1" 1>&2
 	exit 1
 }
 
 usage () {
 	cat 1>&2 <<EOF
-record options [filename]
+$(basename "$0") options [filename]
 Record session audio and/or video with ffmpeg.
 
 Options:
-  -v, --verbose     be more verbose
-  -q, --quiet       supress most messages
-  -a, --audio       record loopback audio
-  -x, --video       record selection of X display
-  -t, -d=DURATION   stop recording after DURATION
-  -?, -h, --help    display this help and exit
+	-v			be more verbose
+	-q			supress most messages
+	-a			record loopback audio
+	-x			record selection of X display
+	-t=DURATION	stop recording after DURATION
+	-k			launch screenkey(1) during recording
+	-?			display this help and exit
 
 At least one recording method must be specified. File formats are determined by
-the file extension. By default FLAC is used for audio only recording and WebM is
-used for any video recording.
+file extension if filename is provided, otherwise FLAC is used for audio only
+recording and mp4 is used for any video recording. See ffmpeg(1) for valid
+DURATION values.
 EOF
+	exit 0
 }
 
-OK= DEST= ARGDEST=
-LOGLEVEL="level+info"
+OK= DEST=
 ARGS="-hide_banner"
 
-while [ "$#" != 0 ]; do
-	case "$1" in
-		-q|--quiet)   LOGLEVEL="fatal" ;;
-		-v|--verbose) LOGLEVEL="level+verbose" ;;
-
-		-a|--audio)
-			OK=1
+while getopts hqvaxkt: f; do
+	case $f in
+		\?) die "missing operand" ;;
+		h)  usage ;;
+		q)  ARGS="$ARGS -loglevel fatal" ;;
+		v)  ARGS="$ARGS -loglevel level+verbose" ;;
+		a)
 			ARGS="$ARGS -f alsa -ac 2 -i loopin"
 			ln -s "$XDG_CONFIG_HOME/alsa/asoundrc-loopback" "$XDG_CONFIG_HOME/alsa/asoundrc"
 			[ -z "$DEST" ] && DEST="$HOME/media/audio/$(date +%FT%H%M%S).flac"
-			;;
-		-x|--video)
 			OK=1
-			REGION=$(xrectsel "%wx%h %x,%y")
-			[ "${REGION% *}" = "0x0" ] && die "Invalid X selection"
-
-			ARGS="$ARGS -video_size ${REGION% *} -f x11grab -i :0.0+${REGION#* }"
-			[ -z "$ARGDEST" ] && DEST="$HOME/media/video/rec/$(date +%FT%H%M%S).webm"
 			;;
-		-t|-d|--duration)
-			[ -z "$2" ] && OK= && break
-			ARGS="-t $2 $ARGS"
+		x)
+			REGION=$(slop -f "%wx%h %x,%y")
+			ARGS="$ARGS -video_size ${REGION% *} -f x11grab -i :0.0+${REGION#* }"
+			DEST="$HOME/media/video/rec/$(date +%FT%H%M%S).mp4"
+			OK=1
+			;;
+		t)
+			ARGS="$ARGS -t $OPTARG"
 			shift
 			;;
-		-\?|-h|--help)
-			usage
-			exit 0
-			;;
-		*)
-			ARGDEST=1
-			DEST=$1
+		k)
+			if type screenkey >/dev/null 2>&1; then
+				screenkey &
+			else
+				echo command "screenkey" not found, skipping option >&2
+			fi
 			;;
 	esac
-
-	shift
 done
 
-[ -z "$OK" ] && die "missing operand"
-[ ! -d "$(dirname "$DEST")" ] && die "destination directory does not exist"
+shift $(( OPTIND - 1 ))
+[ $# -ne 0 ] && DEST="$*"
 
-[ "$LOGLEVEL" != "fatal" ] && echo "Executing ffmpeg -loglevel \"$LOGLEVEL\" $ARGS \"$DEST\""
-ffmpeg -loglevel "$LOGLEVEL" $ARGS "$DEST"
+[ -z "$OK" ] && die "missing operand"
+if [ ! -d "$(dirname "$DEST")" ]; then
+	C="Y"
+	echo "destination directory does not exist" >&2
+	echo "create $DEST? [Y/n]"
+	read -r C
+	case $C in
+		Y|y) mkdir -p "$(dirname "$DEST")" ;;
+		*) exit 0 ;;
+	esac
+fi
+
+# shellcheck disable=2086
+ffmpeg $ARGS "$DEST"
+
+# cleanup
+pkill screenkey
+[ -f "$XDG_CONFIG_HOME/alsa/asoundrc" ] && rm "$XDG_CONFIG_HOME/alsa/asoundrc"
 
 notify-send "Recorded to $DEST"
-rm "$XDG_CONFIG_HOME/alsa/asoundrc"
