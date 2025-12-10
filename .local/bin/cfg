@@ -18,7 +18,7 @@ case "$CMD" in
 	d)  set -- diff "$@" ;;
 	l)  set -- log "$@" ;;
 	s)  set -- submodule "$@" ;;
-	su) set -- submodule --remote "$@" ;;
+	su) set -- submodule update --remote "$@" ;;
 	*)  set -- "$CMD" "$@" ;;
 esac
 
