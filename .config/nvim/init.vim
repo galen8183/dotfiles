@@ -60,12 +60,12 @@ set spelllang=en
 nnoremap <silent> <F11> :setlocal spell!<cr>
 inoremap <silent> <F11> <C-O>:setlocal spell!<cr>
 
-let timeoutlen = 1500           " wait for 1.5s before which-key dialog
+let timeoutlen = 1000           " wait for 1s before which-key dialog
 let g:netrw_liststyle = 3       " tree style listing
 let g:yagpdbcc_override_ft = 1  " also detect .go.tmpl .gotmpl
 
 " -- shellcheck --
-map <leader>s :w \| !shellcheck -x %:p<CR>
+map <leader>s :ShellCheck!<cr>
 
 " -- csv.vim --
 let g:csv_default_delim = ','
