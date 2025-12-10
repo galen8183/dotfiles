@@ -19,10 +19,10 @@ main() {
 	fi
 
 	weather
-	#battery
+	battery
 
-	printf 'LAST_RUN=%d\nWEATHER="%s"\nLAST_WEATHER_UPDATE=%d\n' \
-		"$LAST_RUN" "$WEATHER" "$LAST_WEATHER_UPDATE" \
+	printf 'LAST_RUN=%d\nWEATHER="%s"\nLAST_WEATHER_UPDATE=%d\nBATTERY="%s"\nBAT_STATUS=%d\n' \
+		"$LAST_RUN" "$WEATHER" "$LAST_WEATHER_UPDATE" "$BATTERY" "$BAT_STATUS" \
 		> "/tmp/dwmstatus"
 }
 
@@ -30,8 +30,9 @@ BATTERY=0
 BAT_STATUS=1
 battery () {
 	[ $(( SECS % 10 )) -ne 0 ] && return
-	[ -n "$DWMSTATUS_DEBUG" ] && echo "[$(date -Ins)] Updating battery status"
 	cd /sys/class/power_supply || return
+	ls ./BAT* 2>/dev/null || return
+	[ -n "$DWMSTATUS_DEBUG" ] && echo "[$(date -Ins)] Updating battery status"
 
 	TOTAL=0
 	BATN=0
@@ -56,7 +57,7 @@ battery () {
 	esac
 	[ "$(cat ./AC/online)" -eq 1 ] && COLOUR="$STATUS_BLUE"
 
-	BATTERY="Bat: $COLOUR$PERC%$STATUS_RESET"
+	export BATTERY="| Bat: $COLOUR$PERC%$STATUS_RESET"
 }
 
 # approximate locations only :-)
@@ -82,9 +83,11 @@ weather () {
 		W="$STATUS_BLACK${WEATHER:-"Error fetching weather report"}$STATUS_RESET"
 	fi
 
-	WEATHER="$W"
-	LAST_WEATHER_UPDATE="$LAST_RUN"
+	export WEATHER="| $W"
+	export LAST_WEATHER_UPDATE="$LAST_RUN"
 }
+
+[ "$DWMSTATUS_DEBUG" = 2 ] && set -x
 
 touch /tmp/dwmstatus
 . /tmp/dwmstatus
@@ -93,20 +96,23 @@ case "$1" in
 	"") # run own main loop
 		while true; do
 			main
-			VOL="$(amixer sget Master | awk -F"[][]" '/%/ { print $2 }' | head -n1)"
-			DATE="$(date +"%a %F %T")"
+			VOL="| Vol: $(amixer sget Master | awk -F"[][]" '/%/ { print $2 }' | head -n1)"
+			DATE="$(date +"| %a %F %T")"
 			MPRIS="$(mpris-ctl info '%track_name - %artist_name' 2>/dev/null)"
 			[ "$MPRIS" = "" ] && MPRIS="${STATUS_BLACK}n/a${STATUS_RESET}"
 
-			xsetroot -name " $MPRIS | Vol: $VOL | $WEATHER | $DATE " || exit 1
-			#xsetroot -name " $MPRIS | Vol: $VOL | $BATTERY | $WEATHER | $DATE " || exit 1
+			xsetroot -name " $MPRIS $VOL $BATTERY $WEATHER $DATE " || exit 1
 			sleep 1; SECS=$(( SECS + 1 ))
 		done
 		;;
-	weather) # print weather to stdout, and last update time in terminal
+	weather) # print weather to stdout, include last update time in terminal
 		main
 		echo $WEATHER
 		[ -t 0 ] && date -Iseconds -d "@$LAST_WEATHER_UPDATE"
+		;;
+	battery)
+		main
+		echo $BATTERY
 		;;
 	*) # err
 		echo invalid argument "$1"
