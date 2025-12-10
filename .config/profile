@@ -27,7 +27,6 @@ export MANPAGER="nvim +Man!"
 export PAGER="less"
 export PLAYER="mpv"
 
-# erase previous duplicate lines and omit lines beginning with space
 export HISTCONTROL="erasedups:ignorespace"
 export _JAVA_AWT_WM_NONREPARENTING=1
 export JAVAFX_LIB="/usr/local/lib/javafx-sdk-23.0.1/lib"
@@ -36,3 +35,5 @@ export GOPATH="$XDG_DATA_HOME/go"
 PATH="$PATH:$GOPATH/bin"
 PATH="$HOME/.local/bin:$PATH" # prepend to allow shadowing system bins
 export PATH
+
+[ -f "$XDG_CONFIG_HOME/profile.priv" ] && . "$XDG_CONFIG_HOME/profile.priv"
