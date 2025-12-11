@@ -1,0 +1,42 @@
+super + shift + x
+	kill -s 10 "$SXHKD_PID" && notify-send "SXHKD config reloaded"
+
+# System
+
+super + alt + l
+	slock
+
+super + {equal, plus, minus, underscore}
+	amixer -q set Master {2+, 10+, 2-, 10-}
+
+# Util
+
+super + p
+	passmenu
+
+super + {shift,_} + s
+	FILE="$HOME/media/scrot/$(date +%FT%H%M%S).png"; \
+	maim {_,-s} "$FILE"; \
+	xclip -sel clip -t image/png -i "$FILE"; \
+	notify-send "Screenshot copied to clipboard and saved to $FILE"
+
+# super + shift + d
+# 	texdocmenu
+
+super + w
+	randwall
+
+# MPRIS
+
+KP_Insert
+	mpris-ctl --player active --player inactive pp
+
+KP_Enter
+	mpris-ctl --player active --player inactive info "%full" \
+	| xargs -0 -I\{\} notify-send "Player status" "\{\}"
+
+{KP_Delete, KP_Next, KP_Prior}
+	mpris-ctl {stop, prev, next} 2>/dev/null
+
+{KP_Down, KP_Up, KP_Left, KP_Right}
+	mpris-ctl seek {-30s, 30s, -5s, 5s} 2>/dev/null
