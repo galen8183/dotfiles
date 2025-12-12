@@ -32,8 +32,10 @@ KP_Insert
 	mpris-ctl --player active --player inactive pp
 
 KP_Enter
-	mpris-ctl --player active --player inactive info "%full" \
-	| xargs -0 -I\{\} notify-send "Player status" "\{\}"
+	ART=$(mpris-ctl --player ncspot info "%art_url"); \
+	notify-send -i "$XDG_CACHE_HOME/ncspot/covers/$\{ART##*/\}" \
+		"$(mpris-ctl --player ncspot info "%track_name")" \
+		"$(mpris-ctl --player ncspot info "<i>%artist_name</i>\n%album_name\n%position/%track_length\n\n%comment")"
 
 {KP_Delete, KP_Next, KP_Prior}
 	mpris-ctl {stop, prev, next} 2>/dev/null
