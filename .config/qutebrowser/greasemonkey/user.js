@@ -11,8 +11,6 @@
 	// use nord0 as default BG
 	document.addEventListener('DOMContentLoaded', (evt) => {
 		GM_addStyle(`
-		* { font-family: monospace; }
-
 		html body {
 			background-color: #2E3440 !important;
 			font-size: 16px;
