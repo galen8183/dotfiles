@@ -9,58 +9,55 @@
 	'use strict';
 	GM_addStyle(`
 		:root {
+			--custom-chat-input-margin-bottom: 0px;
 			--custom-app-top-bar-height: 0px;
-			--custom-chat-input-margin-bottom: 0px !important;
 
 			--font-primary: Monospace;
-			font-size: 15px !important;
-		}
+			font-size: 15px;
 
-		* {
-			--theme-base-color: #2E3440 !important;
-
-			--background-base-low: #2E3440 !important;
-			--background-base-lower: #2E3440 !important; /* chat */
-			--background-base-lowest: #242933 !important; /* channel list */
-			--background-surface-high: #3B4252 !important; /* message embed */
-			--background-surface-higher: #3B4252 !important; /* context menus */
-			--background-surface-highest: #3B4252 !important; /* context menus */
-			--background-message-hover: #3B4252 !important;
-			--bg-base-tertiary: #242933 !important; /* channel list */
-			--chat-background-default: #3B4252 !important;
-			--header-secondary: #616E87 !important; /* message reply preview */
-		}
-
-		/* smaller message input textarea */
-		.visual-refresh {
+			--custom-chat-input-margin-bottom: 0px;
 			--custom-channel-textarea-text-area-height: calc(32px + var(--space-xs));
+
+			--theme-base-color: #2E3440;
 		}
 
-		/* reduce chat spacing */
-		.attachWrapper__0923f {
-			padding: 4px 0 0 2px !important;
-		}
-		.align-chat-input .scrollerSpacer__36d07 {
-			height: 30px !important;
+		.theme-dark {
+			--background-base-low: #2E3440;
+			--background-base-lower: #2E3440; /* chat */
+			--background-base-lowest: #242933; /* channel list */
+			--background-surface-high: #3B4252; /* message embed */
+			--background-surface-higher: #3B4252; /* context menus */
+			--background-surface-highest: #3B4252; /* context menus */
+			--background-message-hover: #3B4252;
+			--chat-background-default: #3B4252;
+			--header-secondary: #616E87; /* message reply preview */
 		}
 
-		/* reduce margin to bottom of window */
-		.container_c48ade {
-			--custom-chat-input-margin-bottom: 14px !important;
+		/* hide top bar */
+		.c38106a3f0c3ca76-bar {
+			display: none;
 		}
 
 		/* insert colon between username and message */
-		.username_c19a55::after {
+		span.c19a557985eb7793-username::after {
 			content: ":";
 			color: white;
 		}
 
-		/* hide useless buttons */
-		button[aria-label="Send a gift"] {
-			display: none !important;
+		/* reduce chat input height */
+		div._0923f156a0410684-attachWrapper {
+			padding: 4px;
 		}
-		.channelAppLauncher_e6e74f {
-			display: none !important;
+
+		/* hide useless buttons */
+		div[aria-label="Send a gift"] {
+			display: none;
+		}
+		div[aria-label="Open sticker picker"] {
+			display: none;
+		}
+		div[aria-label="Apps"] {
+			display: none;
 		}
 	`);
 	console.info('[Discord] added user CSS');
