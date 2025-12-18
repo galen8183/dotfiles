@@ -15,6 +15,9 @@ export TEXMFHOME="$XDG_DATA_HOME/texmf"
 export TEXMFVAR="$XDG_CACHE_HOME/texlive/texmf-var"
 export TEXMFCONFIG="$XDG_CONFIG_HOME/texlive/texmf-config"
 export BIBINPUTS="$XDG_CONFIG_HOME/bibtex"
+export GOPATH="$XDG_DATA_HOME/go"
+export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
+export CARGO_HOME="$XDG_DATA_HOME/cargo"
 
 export PASSWORD_STORE_DIR="$XDG_DATA_HOME/password-store"
 export PASSWORD_STORE_CLIP_TIME=30
@@ -30,10 +33,18 @@ export PLAYER="mpv"
 export HISTCONTROL="erasedups:ignorespace"
 export _JAVA_AWT_WM_NONREPARENTING=1
 export JAVAFX_LIB="/usr/local/lib/javafx-sdk-23.0.1/lib"
-export GOPATH="$XDG_DATA_HOME/go"
 
-PATH="$PATH:$GOPATH/bin"
-PATH="$HOME/.local/bin:$PATH" # prepend to allow shadowing system bins
+concatpath () {
+    case ":$PATH:" in
+        *:"$2":*)
+            ;;
+        *)
+            [ "$1" -eq 0 ] && PATH="${PATH:+$PATH:}$2" || PATH="$2${PATH:+:$PATH}"
+    esac
+}
+concatpath 0 "$GOPATH/bin"
+concatpath 0 "$CARGO_HOME/bin"
+concatpath 1 "$HOME/.local/bin"
 export PATH
 
 [ -f "$XDG_CONFIG_HOME/profile.priv" ] && . "$XDG_CONFIG_HOME/profile.priv"
