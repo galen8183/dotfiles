@@ -34,13 +34,25 @@ cmp.setup.cmdline({ '/', '?' }, {
 	}
 })
 
--- Set up lspconfig.
+-- Set up lsp.
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-vim.lsp.enable('gopls',         {capabilities = capabilities})
-vim.lsp.enable('texlab',        {capabilities = capabilities})
-vim.lsp.enable('ccls',          {capabilities = capabilities})
-vim.lsp.enable('pylsp',         {capabilities = capabilities})
-vim.lsp.enable('rust_analyzer', {capabilities = capabilities})
+local lsps = {
+	{ 'gopls' },
+	{ 'texlab' },
+	{ 'ccls' },
+	{ 'pylsp' },
+	{ 'rust_analyzer' },
+}
+
+for _, lsp in pairs(lsps) do
+	local name, config = lsp[1], lsp[2]
+	if not config then
+		config = { ["capabilites"] = capabilities }
+	end
+	vim.lsp.config(name, config)
+	vim.lsp.enable(name)
+end
+
 
 vim.keymap.set('c', '<tab>', '<C-z>', { silent = false }) -- fix cmd mode completion
