@@ -124,7 +124,7 @@ if [ $# -eq 0 ]; then
 			VOL="| Vol: $(amixer sget Master | awk -F"[][]" '/%/ { print $2 }' | head -n1)"
 			DATE="$(date +"| %a %F %T")"
 			MPRIS="$(mpris-ctl info '%track_name - %artist_name' 2>/dev/null)"
-			[ "$MPRIS" = "" ] && MPRIS="${STATUS_BLACK}n/a${STATUS_RESET}"
+			[ -z "$MPRIS" ] && MPRIS="${STATUS_BLACK}n/a${STATUS_RESET}"
 			WEATHER="| $WEATHER"
 
 			xsetroot -name " $MPRIS $VOL $BATTERY $WEATHER $DATE " || exit 1
