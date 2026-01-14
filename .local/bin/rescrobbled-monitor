@@ -1,8 +1,0 @@
-#!/bin/sh
-
-while true; do
-	rescrobbled
-	sleep 2h
-	pkill rescrobbled
-	printf "[%s] killed rescrobbled, restarting...\n\n" "$(date -Is)"
-done

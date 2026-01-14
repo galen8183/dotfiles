@@ -10,7 +10,7 @@ xrandr --auto \
 
 eval "$(dbus-launch --exit-with-x11 --sh-syntax)"
 
-autostart="xcompmgr-simple-opacity dunst slstatus sxhkd randwall rescrobbled-monitor"
+autostart="xcompmgr-simple-opacity dunst slstatus sxhkd randwall mpdscribble"
 
 for program in $autostart; do
 	pidof -sx "$program" && continue

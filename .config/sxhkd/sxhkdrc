@@ -16,12 +16,12 @@ super + p
 
 super + {shift,_} + s
 	FILE="$HOME/media/scrot/$(date +%FT%H%M%S).png"; \
-	maim {_,-s} "$FILE"; \
-	xclip -sel clip -t image/png -i "$FILE"; \
+	maim {_,-s} "$FILE" && \
+	xclip -sel clip -t image/png -i "$FILE" && \
 	notify-send "Screenshot copied to clipboard and saved to $FILE"
 
-# super + shift + d
-# 	texdocmenu
+super + shift + l
+	texdocmenu
 
 super + w
 	randwall
@@ -29,16 +29,18 @@ super + w
 # MPRIS
 
 KP_Insert
-	mpris-ctl --player active --player inactive pp
+	mpc toggle
 
 KP_Enter
-	ART=$(mpris-ctl --player ncspot info "%art_url"); \
-	notify-send -i "$XDG_CACHE_HOME/ncspot/covers/$\{ART##*/\}" \
-		"$(mpris-ctl --player ncspot info "%track_name")" \
-		"$(mpris-ctl --player ncspot info "<i>%artist_name</i>\n%album_name\n%position/%track_length\n\n%comment")"
+	ALBUM_ART="$XDG_CACHE_HOME/albumart/$(mpc | head -n1)"; \
+	rmpc albumart --output "$ALBUM_ART"; \
+	notify-send --icon="$ALBUM_ART" \
+		"$(mpc status -f "%title%|%file%" | head -n1)" \
+		"$(mpc status -f "<i>%artist%</i>\n%album%\n[disc %disc%, ]track %track%\n%date%" | head -n4)\n"\
+		"$(mpc status "%currenttime%/%totaltime% %percenttime%" | head -n1)"
 
 {KP_Delete, KP_Next, KP_Prior}
-	mpris-ctl {stop, prev, next} 2>/dev/null
+	mpc {stop, prev, next}
 
 {KP_Down, KP_Up, KP_Left, KP_Right}
-	mpris-ctl seek {-30s, 30s, -5s, 5s} 2>/dev/null
+	mpc seek {-30, +30, -05, +05}
