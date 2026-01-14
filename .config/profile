@@ -33,6 +33,7 @@ export PLAYER="mpv"
 export HISTCONTROL="erasedups:ignorespace"
 export _JAVA_AWT_WM_NONREPARENTING=1
 export JAVAFX_LIB="/usr/local/lib/javafx-sdk-23.0.1/lib"
+export QT_QPA_PLATFORMTHEME=qt5ct
 
 concatpath () {
     case ":$PATH:" in
