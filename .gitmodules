@@ -52,3 +52,6 @@
 [submodule ".local/share/nvim/site/pack/plug/start/rust.vim"]
 	path = .local/share/nvim/site/pack/plug/start/rust.vim
 	url = git@github.com:rust-lang/rust.vim.git
+[submodule ".local/share/nvim/site/pack/plug/start/ron.vim"]
+	path = .local/share/nvim/site/pack/plug/start/ron.vim
+	url = git@github.com:ron-rs/ron.vim.git
