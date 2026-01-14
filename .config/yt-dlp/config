@@ -1,9 +1,4 @@
---output '%(track_number,playlist_index|)02d%(track_number,playlist_index&-)s%(track,title,id)s.%(ext)s'
---output-na-placeholder ''
+--output '%(track_number,playlist_index|)02d%(track,title,id)s.%(ext)s'
 --restrict-filenames
 --prefer-free-formats
 --no-playlist
---cookies-from-browser "chromium:$XDG_DATA_HOME/qutebrowser"
---format 'bv*[height<=1080]+ba/b'
-
---extractor-args "youtube:player_js_version=actual"
