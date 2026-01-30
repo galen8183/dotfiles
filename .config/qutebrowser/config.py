@@ -12,17 +12,18 @@ c.confirm_quit = ['multiple-tabs', 'downloads']
 c.completion.open_categories = ['searchengines', 'quickmarks',
                                 'bookmarks', 'history']
 c.completion.shrink = True
+c.completion.use_best_match = True
 c.completion.web_history.max_items = 2000
+c.downloads.location.remember = True
+c.downloads.location.suggestion = 'both'
 c.keyhint.delay = 500
 c.scrolling.bar = 'when-searching'
 c.tabs.mousewheel_switching = False
 c.tabs.padding = {'bottom': 1, 'left': 1, 'right': 3, 'top': 1}
 c.tabs.pinned.frozen = False
 c.url.default_page = 'about:blank'
-c.url.start_pages = 'qute://version'
 c.url.incdec_segments = ['path', 'query', 'anchor'] # :navigate URL segments
-c.downloads.location.suggestion = 'both'
-c.downloads.location.remember = True
+c.url.start_pages = 'qute://version'
 
 c.editor.command = ['st', '-e', 'nvim', '{}']
 
@@ -33,10 +34,13 @@ c.url.searchengines = {
     'bc': 'https://bandcamp.com/search?q={}',
     'bs': 'https://baresearch.org/search?q={}',
     'di': 'https://en.wiktionary.org/wiki/Special:Search?search={}',
+    'disc': 'https://www.discogs.com/search?q={}',
     'do': 'http://dict.org/bin/Dict?Database=all&Form=Dict2&Query={}',
     'gh': 'https://github.com/search?q={}',
     'josm': 'https://josm.openstreetmap.de/search?q={}',
-    'mb': 'https://musicbrainz.org/search?query={}',
+    'mb': 'https://musicbrainz.org/search/textsearch?type=release&query={}',
+    'mbd': 'https://musicbrainz.org/search?type=doc&query={}',
+    'mbw': 'https://wiki.musicbrainz.org/Special:Search?search={}',
     'mdn': 'https://developer.mozilla.org/en-US/search?q={}',
     'mw': 'https://mwmbl.org/?q={}',
     'om': 'https://www.openstreetmap.org/search?query={}',
@@ -63,9 +67,9 @@ c.zoom.levels = ['25%', '33%', '50%', '67%', '75%', '80%', '90%', '100%',
 c.fonts.web.size.default = 14
 
 # media
-config.bind(';v', 'hint links spawn mpv {hint-url}')
-config.bind(';m', 'hint links spawn yt-mpv {hint-url}')
-config.bind(';i', 'hint images userscript nsxiv')
+config.bind(';v', 'hint links spawn mpv --ytdl-raw-options=sub-langs=en,config-locations="$XDG_CONFIG_HOME/yt-dlp/youtube.conf" {hint-url}')
+config.bind(';m', 'hint links spawn yt-dlp --config-locations "$XDG_CONFIG_HOME/yt-dlp/music.conf" {hint-url}')
+config.bind(';i', 'hint images spawn nsxiv -u {hint-url}')
 
 # general
 config.bind('<Alt-f>', 'hint all tab-fg')
@@ -79,6 +83,7 @@ config.bind('ZQ', 'close')
 config.bind(',ce', 'config-edit')
 config.bind(',cs', 'config-source')
 config.bind('<Alt+p>', 'spawn --userscript qute-pass -U secret -u "user(?:name)?: (.+)" -d dmenu')
+config.bind('gG', 'cmd-set-text -s :tab-give')
 
 # global dark theme
 c.colors.webpage.darkmode.enabled = True
@@ -97,6 +102,13 @@ config.bind('tbH', 'config-cycle -p -t -u *://*.{url:host}/* content.blocking.en
 config.bind('tBh', 'config-cycle -p -u *://{url:host}/* content.blocking.enabled ;; reload')
 config.bind('tBu', 'config-cycle -p -u {url} content.blocking.enabled ;; reload')
 config.bind('tBH', 'config-cycle -p -u *://*.{url:host}/* content.blocking.enabled ;; reload')
+# canvas reading
+config.bind('tvh', 'config-cycle -p -t -u *://{url:host}/* content.canvas_reading ;; reload')
+config.bind('tvu', 'config-cycle -p -t -u {url} content.canvas_reading ;; reload')
+config.bind('tvH', 'config-cycle -p -t -u *://*.{url:host}/* content.canvas_reading ;; reload')
+config.bind('tVh', 'config-cycle -p -u *://{url:host}/* content.canvas_reading ;; reload')
+config.bind('tVu', 'config-cycle -p -u {url} content.canvas_reading ;; reload')
+config.bind('tVH', 'config-cycle -p -u *://*.{url:host}/* content.canvas_reading ;; reload')
 
 c.content.webgl = True
 c.content.unknown_url_scheme_policy = 'disallow'
