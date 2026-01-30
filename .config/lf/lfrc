@@ -8,4 +8,6 @@ map yp $printf '%s' "$fx"  | xclip -sel clip
 map yn $basename -a -- $fx | head -c-1 | xclip -sel clip
 map yd $dirname -- "$f"    | head -c-1 | xclip -sel clip
 
+map gm cd /home/share/music
+
 map <c-n> $nsxiv "$( { [ -d "$f" ] && echo "$f"; } || dirname "$f")"
