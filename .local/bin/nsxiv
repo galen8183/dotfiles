@@ -1,0 +1,56 @@
+#!/bin/sh
+# wrapper script around nsxiv(1) to support URLs in the file list
+# This script is not fully compatible with nsxiv! Flags with arguments *are*
+# passed along, however they must be separated from the flag with '=', not ' '
+
+TMPDIR="${TMPDIR:-/tmp}/$(basename "$0")"
+mkdir -p "$TMPDIR"
+
+# replaceurls replaces URLs in the argument list with downloaded file names
+mkfiles() {
+	noflags=0
+	for arg; do
+		case "$arg" in
+			--) noflags=1; continue ;;
+			-*) [ $noflags -ne 1 ] && { printf "%s " "$arg"; continue; } ;;
+			*://*) arg="$(fetch "$arg")" ;;
+		esac
+
+		printf "%s\n" "$arg" >> "$TMPLIST"
+	done
+}
+
+# fetch downloads media from $1, stripping size URL params if $STRIP_URL is set
+# prints the output file name to stdout
+fetch() {
+	[ "$STRIP_URL" -eq 1 ] && set -- \
+		"$(printf "%s" "$1" | sed -e 's/[?&]\([wh]\|width\|height\|size\)=[0-9]\+//g')"
+
+	curl -L \
+		--remote-name --remote-header-name \
+		--output-dir "$TMPDIR" --no-clobber \
+		--write-out "%{filename_effective}" \
+		"$1"
+}
+
+IMG="$TMPDIR/$(date -Is)"
+STRIP_URL=0
+
+while getopts :1xu f; do
+	# shellcheck disable=2220
+	case "$f" in
+		1) cat > "$IMG" ;;
+		x) xclip -sel clip -target image/png -out > "$IMG" ;;
+		u) STRIP_URL=1 ;;
+	esac
+done
+
+shift $(( OPTIND - 1 ))
+
+TMPLIST="$(mktemp -p "$TMPDIR" files.XXXXXX)"
+[ -f "$IMG" ] && printf "%s\n" "$IMG" >> "$TMPLIST"
+
+# shellcheck disable=2046
+set -- $(mkfiles "$@")
+/bin/nsxiv --stdin "$@" < "$TMPLIST"
+rm "$TMPLIST"
