@@ -13,7 +13,7 @@ alias ffmpeg='ffmpeg -hide_banner'
 alias   tmux='tmux -2'
 alias    xrm='doas xbps-remove'
 alias   mudl='yt-dlp --config-locations="$XDG_CONFIG_HOME/yt-dlp/music.conf"'
-alias yt-mpv='mpv --ytdl-raw-options=config-locations="$XDG_CONFIG_HOME/yt-dlp/youtube.conf"'
+alias yt-mpv='mpv --ytdl-raw-options=sub-langs=en,config-locations="$XDG_CONFIG_HOME/yt-dlp/youtube.conf"'
 
 alias  gs='git status'
 alias  ga='git add'
@@ -38,7 +38,6 @@ alias    cpat='TMPCFG_SRC="$XDG_DATA_HOME/cpat-scores" TMPCFG_DEST="$HOME/.cpat_
 alias  sqlite='TMPCFG_SRC="$XDG_DATA_HOME/sqlite-history" TMPCFG_DEST="$HOME/.sqlite_history" tempconfig sqlite3'
 alias     npm='TMPCFG_SRC="$XDG_DATA_HOME/npm" TMPCFG_DEST="$HOME/.npm" tempconfig npm'
 alias     adb='TMPCFG_SRC="$XDG_DATA_HOME/adb" TMPCFG_DEST="$HOME/.android" tempconfig adb'
-alias firefox='TMPCFG_SRC="$XDG_DATA_HOME/mozilla" TMPCFG_DEST="$HOME/.mozilla" tempconfig firefox'
 
 # tempconfig temporarily moves a config file to a specified location, for
 # applications not recognising XDG-compliant configuration files
