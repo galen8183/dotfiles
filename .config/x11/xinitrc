@@ -10,11 +10,11 @@ xrandr --auto \
 
 eval "$(dbus-launch --exit-with-x11 --sh-syntax)"
 
-autostart="xcompmgr-simple-opacity dunst slstatus sxhkd randwall mpdscribble"
+autostart="picom dunst slstatus sxhkd randwall mpdscribble"
 
 for program in $autostart; do
 	pidof -sx "$program" && continue
 	"$program" > "${XDG_CACHE_HOME:-$HOME/.cache}/autostart.log/$program" 2>&1 &
 done >/dev/null 2>&1
 
-dwm
+dbus-launch ssh-agent dwm
