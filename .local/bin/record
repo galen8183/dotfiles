@@ -1,7 +1,7 @@
 #!/bin/sh
 
 die () {
-	printf "%s\nTry '$0 -h' for more information.\n" "$1" 1>&2
+	printf "%s\nTry '$(basename "$0") -h' for more information.\n" "$1" 1>&2
 	exit 1
 }
 
@@ -11,13 +11,14 @@ $(basename "$0") options [filename]
 Record session audio and/or video with ffmpeg.
 
 Options:
-	-v			be more verbose
-	-q			supress most messages
-	-a			record loopback audio
-	-x			record selection of X display
-	-t=DURATION	stop recording after DURATION
-	-k			launch screenkey(1) during recording
-	-?			display this help and exit
+	-v          be more verbose
+	-q          supress most messages
+	-a          record loopback audio
+	-x          record selection of X display
+	-t=DURATION stop recording after DURATION
+	-k          launch screenkey(1) during recording
+	-r=RATE     record timelapse at PTS *= RATE
+	-?          display this help and exit
 
 At least one recording method must be specified. File formats are determined by
 file extension if filename is provided, otherwise FLAC is used for audio only
@@ -30,7 +31,7 @@ EOF
 OK= DEST=
 ARGS="-hide_banner"
 
-while getopts hqvaxkt: f; do
+while getopts hqvaxt:kr: f; do
 	case $f in
 		\?) die "missing operand" ;;
 		h)  usage ;;
@@ -50,7 +51,6 @@ while getopts hqvaxkt: f; do
 			;;
 		t)
 			ARGS="$ARGS -t $OPTARG"
-			shift
 			;;
 		k)
 			if type screenkey >/dev/null 2>&1; then
@@ -59,6 +59,9 @@ while getopts hqvaxkt: f; do
 				echo command "screenkey" not found, skipping option >&2
 			fi
 			;;
+		r)
+			ARGS="$ARGS -filter:v setpts=$OPTARG*PTS -r 24"
+			;;
 	esac
 done
 
@@ -66,13 +69,15 @@ shift $(( OPTIND - 1 ))
 [ $# -ne 0 ] && DEST="$*"
 
 [ -z "$OK" ] && die "missing operand"
-if [ ! -d "$(dirname "$DEST")" ]; then
+
+DESTDIR="$(dirname "$DEST")"
+if [ ! -d "$DESTDIR" ]; then
 	C="Y"
 	echo "destination directory does not exist" >&2
-	echo "create $DEST? [Y/n]"
+	echo "create $DESTDIR? [Y/n]"
 	read -r C
 	case $C in
-		Y|y) mkdir -p "$(dirname "$DEST")" ;;
+		Y|y) mkdir -p "$DESTDIR" ;;
 		*) exit 0 ;;
 	esac
 fi
@@ -84,4 +89,5 @@ ffmpeg $ARGS "$DEST"
 pkill screenkey
 [ -f "$XDG_CONFIG_HOME/alsa/asoundrc" ] && rm "$XDG_CONFIG_HOME/alsa/asoundrc"
 
+printf "%s" "$DEST" | xclip -sel clip
 notify-send "Recorded to $DEST"
