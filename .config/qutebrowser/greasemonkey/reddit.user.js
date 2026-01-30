@@ -28,5 +28,5 @@
 		});
 	});
 	
-	console.log('[Reddit] Removed promotions');
+	console.log('[Reddit] Added user CSS & removed promotions');
 })();

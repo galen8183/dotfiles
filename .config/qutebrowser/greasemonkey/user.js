@@ -12,6 +12,7 @@
 	document.addEventListener('DOMContentLoaded', (evt) => {
 		GM_addStyle(`
 		html body {
+			--bg: #2E3440;
 			background-color: #2E3440 !important;
 			font-size: 16px;
 		}
@@ -25,6 +26,10 @@
 		}
 		.valuedescription { background-color: #242933 !important; }
 		.wikitable { background-color: #3B4252; }
+
+		a {
+			color: #5e81ac;
+		}
 		`);
 	});
 

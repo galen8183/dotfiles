@@ -9,12 +9,10 @@
 	'use strict';
 	GM_addStyle(`
 		:root {
-			--custom-chat-input-margin-bottom: 0px;
-			--custom-app-top-bar-height: 0px;
-
 			--font-primary: Monospace;
 			font-size: 15px;
 
+			--custom-app-top-bar-height: 0px;
 			--custom-chat-input-margin-bottom: 0px;
 			--custom-channel-textarea-text-area-height: calc(32px + var(--space-xs));
 
@@ -34,18 +32,21 @@
 		}
 
 		/* hide top bar */
-		.c38106a3f0c3ca76-bar {
+		.bar_c38106 {
 			display: none;
 		}
 
-		/* insert colon between username and message */
-		span.c19a557985eb7793-username::after {
-			content: ":";
-			color: white;
+		/* remove custom username font, insert colon after */
+		span.username_c19a55 {
+			font-family: Monospace;
+			&:after {
+				content: ":";
+				color: white;
+			}
 		}
 
 		/* reduce chat input height */
-		div._0923f156a0410684-attachWrapper {
+		div.attachWrapper__0923f {
 			padding: 4px;
 		}
 
