@@ -16,14 +16,14 @@ super + p
 
 super + {shift,_} + s
 	FILE="$HOME/media/scrot/$(date +%FT%H%M%S).png"; \
-	maim {_,-s} "$FILE" && \
+	maim {-g "1920x1056+1920+19",-s} "$FILE" && \
 	xclip -sel clip -t image/png -i "$FILE" && \
-	notify-send "Screenshot copied to clipboard and saved to $FILE"
+	notify-send -i "$FILE" "Screenshot copied to clipboard and saved to $FILE"
 
 super + shift + l
 	texdocmenu
 
-super + w
+super + b
 	randwall
 
 # MPRIS
@@ -32,12 +32,11 @@ KP_Insert
 	mpc toggle
 
 KP_Enter
-	ALBUM_ART="$XDG_CACHE_HOME/albumart/$(mpc | head -n1)"; \
-	rmpc albumart --output "$ALBUM_ART"; \
-	notify-send --icon="$ALBUM_ART" \
+	dunstify --icon="/tmp/rmpc/albumart" \
 		"$(mpc status -f "%title%|%file%" | head -n1)" \
 		"$(mpc status -f "<i>%artist%</i>\n%album%\n[disc %disc%, ]track %track%\n%date%" | head -n4)\n"\
-		"$(mpc status "%currenttime%/%totaltime% %percenttime%" | head -n1)"
+		"$(mpc status "%currenttime%/%totaltime% %percenttime%" | head -n1)\n"\
+		'<span size="8pt" style="italic">'"$(mpc queued)</span>"
 
 {KP_Delete, KP_Next, KP_Prior}
 	mpc {stop, prev, next}
