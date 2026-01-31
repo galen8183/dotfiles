@@ -1,0 +1,9 @@
+#!/bin/sh
+# simple script for setting a random wallpaper
+
+rand() {
+	XDG_PICTURES_DIR="$(xdg-user-dir PICTURES)"
+	find "$XDG_PICTURES_DIR" -type f -iname "*.jp*g" -o -iname "*.png" | shuf -n 1
+}
+
+xwallpaper --zoom "$(rand)"

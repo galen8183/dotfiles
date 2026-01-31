@@ -1,0 +1,28 @@
+#!/bin/sh
+
+BOOKMARKS="
+amsmath
+biblatex
+lshort
+pgfplots
+tikz
+tikzposter
+"
+
+sel="$(echo "Search\n$BOOKMARKS" | dmenu -l 10)"
+[ "$sel" ] || exit
+
+case "$sel" in
+	Search*)
+		q="${sel#Search}"
+		q="${q## }"
+		[ ! "$q" ] && q="$(dmenu -p "Search:" <&-)"
+		[ "$q" ] || exit
+
+		sel="$(texdoc --showall --list --machine "$q" \
+			| cut -f3 \
+			| dmenu -l 30 -i -vi)"
+		[ -n "$sel" ] && texdoc --just-view "$sel"
+		;;
+	*) texdoc "$sel" ;;
+esac
