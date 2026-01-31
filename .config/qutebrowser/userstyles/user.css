@@ -1,0 +1,26 @@
+html, body {
+	--bg: #2E3440;
+	background-color: #2E3440 !important;
+}
+
+a, a:link, a:visited {
+	color: #5e81ac;
+}
+
+input, select, textarea {
+	background-color: #3b4252;
+}
+
+.warning {
+	background-color: #ebcb8b !important;
+}
+
+/* mediawiki tweaks */
+.mw-page-container { background-color: #2E3440; }
+.mw-body { background-color: #2E3440; }
+#mw-page-base {
+	background-color: #242933;
+	background-image: unset;
+}
+.valuedescription { background-color: #242933 !important; }
+.wikitable { background-color: #3B4252; }
