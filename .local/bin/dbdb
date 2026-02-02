@@ -1,0 +1,15 @@
+#!/bin/sh
+# dbdb is a directory chooser using dmenu
+
+dir=""
+while [ "$dir" != "." ]; do
+	# list all dirs, remove './' prefix, add '..', sort
+	dir="$(find . -maxdepth 1 -type d \
+		| sed -e 's!^\./!!' -e '$a ..' \
+		| sort \
+		| dmenu -i -vi -p "$1 $(pwd)")"
+	[ ! -d "$dir" ] && mkdir "$dir"
+	cd "$dir"
+done
+
+echo "$PWD"
