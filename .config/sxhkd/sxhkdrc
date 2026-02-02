@@ -32,7 +32,7 @@ super + c
 # MPRIS
 
 KP_Insert
-	mpc toggle
+	mpc toggle >/dev/null
 
 KP_Enter
 	notify-send --icon="/tmp/rmpc/albumart" \
