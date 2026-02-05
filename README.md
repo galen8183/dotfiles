@@ -24,11 +24,14 @@ directory. See `cfg h` or the script source for available shorthands.
   Note the git dir can be placed elsewhere, but must be configured in the `cfg`
   script by altering `$CFG_DIR`.
 
-- Download the ([`cfg`](.local/bin/cfg)) script and place it in your `$PATH`.
+- Download the [`cfg`](.local/bin/cfg) script and place it in your `$PATH`.
 
-- Configure the `$CFG_FILES` variable to include files in the repository root
-  (while running git commands)
+That's it! Now you can check in any file with `git add -f FILE...` -- the
+`-f`/`--force` option is required the first time a file is staged since we
+ignore all files by default. This makes it difficult to accidentally check in
+secret files.
 
-- That's it! Now you can check in any file with `git add -f FILE...` -- the
-  `-f` is required the first time a file is staged since we ignore all files by
-  default. This makes it difficult to accidentally check in secret files.
+Files can be included in the root directory (`$HOME`) of the git repo but
+normally located elsewhere in the filesystem by listing them in `cfg`'s
+`$CFG_FILES` variable. These should be checked in relative to `$HOME`, *not*
+where they are normally located! See the `cfg` script for details.
