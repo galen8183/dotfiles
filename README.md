@@ -19,6 +19,7 @@ directory. See `cfg h` or the script source for available shorthands.
   $ mkdir -p "$XDG_CONFIG_DIR/dotfiles"
   $ git init --separate-git-dir="$XDG_CONFIG_HOME/dotfiles/repo.git" "$HOME"
   $ rm .git
+  $ echo '*' > "$XDG_CONFIG_DIR/dotfiles/.gitignore"
   ```
 
   Note the git dir can be placed elsewhere, but must be configured in the `cfg`
