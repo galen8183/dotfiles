@@ -36,6 +36,8 @@
 		table.tbl tr.even td, table.tbl tr.even th {
 			background: #4c566a;
 		}
+		table.tbl tr.subh td, table.tbl tr.subh th {
+			background: #4c566a;
 		}
 
 		div.autocomplete2 ul, ul.ui-widget-content {
@@ -112,6 +114,10 @@
 
 		#release-editor #recordings fieldset table tr.even td {
 			background-color: #3b4252;
+		}
+
+		span.artwork-icon, span.caa-icon, span.eaa-icon {
+			background-color: #5e81ac50;
 		}
 	`);
 	console.info('[MusicBrainz] added user CSS');
