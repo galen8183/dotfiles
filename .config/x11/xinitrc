@@ -11,10 +11,11 @@ xrandr --auto \
 eval "$(dbus-launch --exit-with-x11 --sh-syntax)"
 
 autostart="picom dunst slstatus sxhkd randwall mpdscribble"
+mkdir -p "${XDG_CACHE_HOME:=$HOME/.cache}/autostart.log"
 
 for program in $autostart; do
 	pidof -sx "$program" && continue
-	"$program" > "${XDG_CACHE_HOME:-$HOME/.cache}/autostart.log/$program" 2>&1 &
+	"$program" > "$XDG_CACHE_HOME/autostart.log/$program" 2>&1 &
 done >/dev/null 2>&1
 
 dbus-launch ssh-agent dwm
