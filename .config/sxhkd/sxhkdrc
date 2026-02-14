@@ -35,7 +35,7 @@ KP_Insert
 	mpc toggle >/dev/null
 
 KP_Enter
-	notify-send --icon="/tmp/rmpc/albumart" \
+	notify-send --icon="/tmp/rmpc/albumart" -- \
 		"$(mpc status -f "%title%|%file%" | head -n1)" \
 		"$(mpc status -f "<i>%artist%</i>\n%album%\n[disc %disc%, ]track %track%\n%date%" | head -n4)\n"\
 		"$(mpc status "%currenttime%/%totaltime% %percenttime%" | head -n1)\n"\
