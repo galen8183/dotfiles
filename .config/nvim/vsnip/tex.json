@@ -1,0 +1,36 @@
+{
+	"#!#": {
+		"prefix": "#!#",
+		"description": "https://github.com/Microsoft/language-server-protocol/blob/main/snippetSyntax.md"
+	},
+	"begin": {
+		"prefix": "B",
+		"body": "\\begin{$1}[$2]\n\t${0:${TM_SELECTED_TEXT}}\n\\end{$1}",
+		"description": "begin environment"
+	},
+	"enum": {
+		"prefix": "BENM",
+		"body": "\\begin{enm}\n\t\\item ${0:${TM_SELECTED_TEXT}}\n\\end{enm}",
+		"description": "enum environment"
+	},
+	"center": {
+		"prefix": "BC",
+		"body": "\\begin{center}\n\t${0:${TM_SELECTED_TEXT}}\n\\end{center}",
+		"description": "center environment"
+	},
+	"aligned": {
+		"prefix": "BALD",
+		"body": "\\begin{aligned}\n\t${0:${TM_SELECTED_TEXT}}\n\\end{aligned}",
+		"description": "center environment"
+	},
+	"parbox": {
+		"prefix": "parb",
+		"body": "\\parbox[t]{0.45\\textwidth}{\n\t${0:${TM_SELECTED_TEXT}}\n}",
+		"description": "parbox, top aligned, 45% textwidth"
+	},
+	"node": {
+		"prefix": "node",
+		"body": "\\node [$1] at ($2) {$0};",
+		"description": "tikz node"
+	}
+}
