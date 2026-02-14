@@ -1,7 +1,6 @@
 # debloat
 c.content.autoplay = False
 c.content.canvas_reading = False
-c.qt.workarounds.disable_hangouts_extension = True
 c.content.geolocation = False
 c.content.notifications.enabled = False
 c.content.prefers_reduced_motion = True
@@ -14,7 +13,7 @@ c.url.yank_ignored_parameters = [
     'utm_content', 'utm_name', 'from', 'search_item_id', 'search_item_type',
     'search_match_part', 'search_page_id', 'search_page_no', 'search_rank',
     'search_sig', 'pp', 'si', 'ab_channel', 'igshid', 'i_source', 'i_medium',
-    'i_campaign', '__cft__', '__tn__'
+    'i_campaign', '__cft__', '__tn__', 'fbclid'
 ]
 
 #  use both Brave's ABP-style and host blockers
