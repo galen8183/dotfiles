@@ -1,22 +1,23 @@
 #!/bin/sh
 # wrapper script around nsxiv(1) to support URLs in the file list
-# This script is not fully compatible with nsxiv! Flags with arguments *are*
-# passed along, however they must be separated from the flag with '=', not ' '
 
 TMPDIR="${TMPDIR:-/tmp}/$(basename "$0")"
 mkdir -p "$TMPDIR"
 
-# replaceurls replaces URLs in the argument list with downloaded file names
+# mkfiles writes a list of filenames to $TMPLIST from files and URLs in the
+# parameter list. Options are returned in a space-separated list as passed.
+# Options with arguments *must* use -a=b or --a=b, space-separation is not
+# supported. The special option -- will treat all further params as files/URLs.
 mkfiles() {
 	noflags=0
-	for arg; do
-		case "$arg" in
+	for param; do
+		case "$param" in
 			--) noflags=1; continue ;;
-			-*) [ $noflags -ne 1 ] && { printf "%s " "$arg"; continue; } ;;
-			*://*) arg="$(fetch "$arg")" ;;
+			-*) [ $noflags -ne 1 ] && { printf "%s " "$param"; continue; } ;;
+			*://*) param="$(fetch "$param")" ;;
 		esac
 
-		printf "%s\n" "$arg" >> "$TMPLIST"
+		printf "%s\n" "$param" >> "$TMPLIST"
 	done
 }
 
@@ -24,7 +25,7 @@ mkfiles() {
 # prints the output file name to stdout
 fetch() {
 	[ "$STRIP_URL" -eq 1 ] && set -- \
-		"$(printf "%s" "$1" | sed -e 's/[?&]\([wh]\|width\|height\|size\)=[0-9]\+//g')"
+		"$(printf "%s" "$1" | sed -e 's/\([?&]\)\([wh]\|width\|height\|size\)=[0-9]\+[?&]\?/\1/g')"
 
 	curl -L \
 		--remote-name --remote-header-name \
