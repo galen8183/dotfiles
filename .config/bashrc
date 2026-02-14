@@ -13,7 +13,6 @@ alias ffmpeg='ffmpeg -hide_banner'
 alias   tmux='tmux -2'
 alias    xrm='doas xbps-remove'
 alias   mudl='yt-dlp --config-locations="$XDG_CONFIG_HOME/yt-dlp/music.conf"'
-alias yt-mpv='mpv --ytdl-raw-options=sub-langs=en,config-locations="$XDG_CONFIG_HOME/yt-dlp/youtube.conf"'
 
 alias  gs='git status'
 alias  ga='git add'

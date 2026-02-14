@@ -7,4 +7,4 @@ bind u mark-unread
 bind d mark-read
 
 bind i exec sh -c 'curl -so /tmp/newsraft-img "%l" && nsxiv /tmp/newsraft-img'
-bind m exec mpv --ytdl-raw-options=sub-langs=en,config-locations="$XDG_CONFIG_HOME/yt-dlp/youtube.conf" "%l"
+bind m exec yt-mpv "%l"

@@ -67,8 +67,8 @@ c.zoom.levels = ['25%', '33%', '50%', '67%', '75%', '80%', '90%', '100%',
 c.fonts.web.size.default = 14
 
 # media
-config.bind(';v', 'hint links spawn mpv --ytdl-raw-options=sub-langs=en,config-locations="$XDG_CONFIG_HOME/yt-dlp/youtube.conf" {hint-url}')
-config.bind(';m', 'hint links spawn yt-dlp --config-locations "$XDG_CONFIG_HOME/yt-dlp/music.conf" {hint-url}')
+config.bind(';v', 'hint links spawn yt-mpv {hint-url}')
+config.bind(';m', 'hint links spawn yt-dlp --config-locations ~/.config/yt-dlp/music.conf {hint-url}')
 config.bind(';i', 'hint images spawn nsxiv -u {hint-url}')
 
 # general
