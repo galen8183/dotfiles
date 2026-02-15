@@ -7,15 +7,15 @@ XDG basedir compliant configuration file (dotfile) tracking with git
 
 Command aliases:
 	h     show this help text and exit
-	s     show repo status (git status)
+	s     show repo status                           (git status)
 	i     show repo status including untracked files (git status --ignored)
-	a     add file(s) to the staging area (git add)
-	c     commit changes to the repository (git commit)
-	ca    amend the last commit (git commit --amend)
-	d     show changes to configuration files (git diff)
-	l     show commit logs (git log)
-	su    show repository submodules (git submodule)
-	suu   update submodules to remote HEAD(s) (git submodule update --remote)
+	a     add file(s) to the staging area            (git add)
+	c     commit changes to the repository           (git commit)
+	ca    amend the last commit                      (git commit --amend)
+	d     show changes to configuration files        (git diff)
+	l     show commit logs                           (git log)
+	su    show repository submodules                 (git submodule)
+	suu   update submodules to remote HEAD(s)        (git submodule update --remote)
 
 Providing no arguments will default to showing the repo status (git status).
 See git(1) and individual command manpages for details. All arguments not
