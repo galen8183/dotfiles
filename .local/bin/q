@@ -1,0 +1,6 @@
+#!/bin/sh
+# small helper script to insert a track to be played next by mpd
+
+TRACK="$(mpc listall | fzf)"
+[ -n "$TRACK" ] && mpc insert "$TRACK"
+mpc queued
