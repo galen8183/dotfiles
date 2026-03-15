@@ -13,7 +13,6 @@ Record session audio and/or video with ffmpeg.
 Options:
 	-v          be more verbose
 	-q          supress most messages
-	-a          record loopback audio
 	-x          record selection of X display
 	-t=DURATION stop recording after DURATION
 	-k          launch screenkey(1) during recording
@@ -31,18 +30,12 @@ EOF
 OK= DEST=
 ARGS="-hide_banner"
 
-while getopts hqvaxt:kr: f; do
+while getopts hqvxt:kr: f; do
 	case $f in
 		\?) die "missing operand" ;;
 		h)  usage ;;
 		q)  ARGS="$ARGS -loglevel fatal" ;;
 		v)  ARGS="$ARGS -loglevel level+verbose" ;;
-		a)
-			ARGS="$ARGS -f alsa -ac 2 -i loopin"
-			ln -s "$XDG_CONFIG_HOME/alsa/asoundrc-loopback" "$XDG_CONFIG_HOME/alsa/asoundrc"
-			[ -z "$DEST" ] && DEST="$HOME/media/audio/$(date +%FT%H%M%S).flac"
-			OK=1
-			;;
 		x)
 			REGION=$(slop -f "%wx%h %x,%y")
 			ARGS="$ARGS -video_size ${REGION% *} -f x11grab -i :0.0+${REGION#* }"
@@ -87,7 +80,6 @@ ffmpeg $ARGS "$DEST"
 
 # cleanup
 pkill screenkey
-[ -f "$XDG_CONFIG_HOME/alsa/asoundrc" ] && rm "$XDG_CONFIG_HOME/alsa/asoundrc"
 
 printf "%s" "$DEST" | xclip -sel clip
 notify-send "Recorded to $DEST"
